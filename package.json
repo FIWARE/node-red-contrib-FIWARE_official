@@ -1,0 +1,41 @@
+{
+  "name": "node-red-contrib-fiware_official",
+  "version": "1.0.0",
+  "description": "Node-Red FIWARE NGSIv2 & NGSI-LD official implementation",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "node-red" : {
+    "nodes": {
+      "NGSIv2-Entity": "ngsiv2/entity/ngsiv2-entity.js",
+      "NGSI-Dataset":  "ngsiv2/dataset/ngsiv2-dataset.js"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url":  "git+https://github.com/FIWARE/node-red-contrib-fiware_official.git"
+  },
+  "dependencies": {
+    "request": "^2.88.0"
+  },
+  "keywords": [
+    "node",
+    "red",
+    "contrib",
+    "fiware",
+    "ngsi",
+    "ngsi-ld",
+    "etsi",
+    "context",
+    "process",
+    "data",
+    "json",
+    "json-ld"
+  ],
+  "author": "Jose M. Cantera",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/FIWARE/node-red-contrib-fiware_official/issues"
+  },
+  "homepage": "https://github.com/FIWARE/node-red-contrib-fiware_official#readme"
+}

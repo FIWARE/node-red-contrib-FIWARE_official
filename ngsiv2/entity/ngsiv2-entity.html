@@ -1,0 +1,41 @@
+<script type="text/javascript">
+    RED.nodes.registerType('NGSIv2-Entity',{
+        category: 'FIWARE',
+        color: '#a6bbcf',
+        defaults: {
+            name: { value: "" },
+            endpoint: { value: "https://orion.lab.fiware.org" },
+            service: { value: ""}
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "file.png",
+        label: function() {
+            return this.name || "NGSIv2-Entity";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="NGSIv2-Entity">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-endpoint"><i class="icon-tag"></i> Endpoint</label>
+        <input type="text" id="node-input-endpoint" placeholder="https://orion.lab.fiware.org">
+    </div>
+    <div class="form-row">
+        <label for="node-input-service"><i class="icon-tag"></i> Fiware-Service</label>
+        <input type="text" id="node-input-service">
+    </div>
+    <div class="form-row">
+        <label for="node-input-entity-options"><i class="icon-tag"></i>Options</label>
+        <input type="text" id="node-input-entity-options">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="NGSIv2-Entity">
+    <p>A simple node that allows to obtain an NGSIv2 Entity. Entity id shall be provided as part of the msg.payload
+    </p>
+</script>
