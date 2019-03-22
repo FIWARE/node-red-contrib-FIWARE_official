@@ -68,6 +68,7 @@ module.exports = function(RED) {
       else {
         msg.payload = null;
         node.error(`Entity ${entityId} could not be retrieved. HTTP status code: ${statusCode}`);
+        return;
       }
 
       node.send(msg);
