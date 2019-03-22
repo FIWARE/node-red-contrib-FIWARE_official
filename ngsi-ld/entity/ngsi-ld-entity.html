@@ -1,0 +1,65 @@
+<!-- NGSI-LD Entity Config UI -->
+<!-- Copyright (c) 2019 FIWARE Foundation e.V. -->
+<script type="text/javascript">
+    const defLdContext =
+        'https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/defaultContext/defaultContext.jsonld';
+
+    RED.nodes.registerType('NGSI-LD-Entity',{
+        category: 'NGSI_LD',
+        color: '#a6bbcf',
+        defaults: {
+            name: { value: "" },
+            endpoint: {
+                value: "",
+                required: true,
+                validate: function(v) {
+                    try {
+                        const url = new URL(v);
+                        if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+                            return false;
+                        }
+                        return true;
+                    }
+                    catch(e) {
+                        return false;
+                    }
+                }
+            },
+            ldContext: { value: defLdContext },
+            mode: { value: "normalized" }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "file.png",
+        label: function() {
+            return this.name || "NGSI-LD-Entity";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="NGSI-LD-Entity">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-endpoint"><i class="icon-tag"></i> Endpoint</label>
+        <input required type="url" id="node-input-endpoint" placeholder="NGSI-LD endpoint URL">
+    </div>
+    <div class="form-row">
+        <label for="node-input-ldContext"><i class="icon-tag"></i> JSON-LD @context</label>
+        <input required type="url" id="node-input-ldContext" placeholder="NGSI-LD @context">
+    </div>
+    <div class="form-row">
+        <label for="node-input-mode"><i class="icon-tag"></i>Representation</label>
+        <select id="node-input-mode">
+            <option value="normalized">normalized</option>
+            <option value="keyValues">keyValues (simplified)</option>
+        </select>
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="NGSI-LD-Entity">
+    <p>A simple node that allows to obtain an NGSI-LD Entity. Entity id shall be provided as part of the msg.payload
+    </p>
+</script>
