@@ -3,14 +3,14 @@
   "version": "1.0.0",
   "description": "Node-Red FIWARE NGSIv2 & ETSI NGSI-LD official implementation",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha \"test/**/*_spec.js\"",
     "lint": "eslint . --cache --fix",
     "prettier": "prettier --single-quote --parser flow --write **/*.js *.js"
   },
   "node-red": {
     "nodes": {
-      "NGSIv2-Entity":  "ngsiv2/entity/ngsiv2-entity.js",
-      "NGSI-Dataset":   "ngsiv2/dataset/ngsiv2-dataset.js",
+      "NGSIv2-Entity": "ngsiv2/entity/ngsiv2-entity.js",
+      "NGSI-Dataset": "ngsiv2/dataset/ngsiv2-dataset.js",
       "NGSI-LD-Entity": "ngsi-ld/entity/ngsi-ld-entity.js"
     }
   },
@@ -25,7 +25,9 @@
     "eslint": "^5.15.1",
     "eslint-config-tamia": "^6.0.1",
     "eslint-plugin-prettier": "^2.7.0",
-    "prettier": "^1.16.4"
+    "prettier": "^1.16.4",
+    "node-red": "^0.20.2",
+    "node-red-node-test-helper": "^0.2.1"
   },
   "keywords": [
     "node",
@@ -42,7 +44,7 @@
     "json-ld"
   ],
   "author": "FIWARE Foundation e.V.",
-  "license": "Apache 2.0",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/FIWARE/node-red-contrib-FIWARE_official/issues"
   },

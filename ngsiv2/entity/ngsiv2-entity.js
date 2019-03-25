@@ -40,7 +40,7 @@ module.exports = function(RED) {
       }
 
       const headers = Object.create(null);
-      if (service.trim()) {
+      if (service && service.trim()) {
         headers['Fiware-Service'] = service;
       }
 
