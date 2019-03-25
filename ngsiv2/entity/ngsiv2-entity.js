@@ -33,10 +33,22 @@ module.exports = function(RED) {
       const service = config.service;
       const mode = config.mode;
 
+      const attrs = config.attrs;
+
       let resource = `${endpoint}/${v2Prefix}/${entityId}`;
 
+      const parameters = [];
+
       if (mode === 'keyValues') {
-        resource += `?options=${mode}`;
+        parameters.push(`options=${mode}`);
+      }
+
+      if (attrs && attrs.trim()) {
+        parameters.push(`attrs=${attrs}`);
+      }
+
+      if (parameters.length > 0) {
+        resource += `?${parameters.join('&')}`;
       }
 
       const headers = Object.create(null);

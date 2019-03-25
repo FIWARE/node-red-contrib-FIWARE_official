@@ -21,7 +21,8 @@
                 }
             },
             service: { value: '' },
-            mode: { value: 'normalized' }
+            mode: { value: 'normalized' },
+            attrs: { value: '' }
         },
         inputs: 1,
         outputs: 1,
@@ -46,6 +47,10 @@
         <input type="text" id="node-input-service">
     </div>
     <div class="form-row">
+        <label for="node-input-attrs"><i class="icon-tag"></i>Attributes</label>
+        <input type="text" id="node-input-attrs">
+    </div>
+    <div class="form-row">
         <label for="node-input-mode"><i class="icon-tag"></i>Representation</label>
         <select id="node-input-mode">
             <option value="normalized">normalized</option>
@@ -55,6 +60,7 @@
 </script>
 
 <script type="text/x-red" data-help-name="NGSIv2-Entity">
-    <p>A simple node that allows to obtain an NGSIv2 Entity. Entity id shall be provided as part of the msg.payload
+    <p>
+      A simple node that allows to obtain an NGSIv2 Entity. Entity id shall be provided as part of the msg.payload
     </p>
 </script>

@@ -50,10 +50,22 @@ module.exports = function(RED) {
 
       const mimeType = config.mimeType;
 
+      const attrs = config.attrs;
+
+      const parameters = [];
+
       let resource = `${endpoint}/${ldPrefix}/${entityId}`;
 
       if (mode === 'keyValues') {
-        resource += `?options=${mode}`;
+        parameters.push(`options=${mode}`);
+      }
+
+      if (attrs && attrs.trim()) {
+        parameters.push(`attrs=${attrs}`);
+      }
+
+      if (parameters.length > 0) {
+        resource += `?${parameters.join('&')}`;
       }
 
       const linkHeaderValue = `<${ldContext}>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"`;
