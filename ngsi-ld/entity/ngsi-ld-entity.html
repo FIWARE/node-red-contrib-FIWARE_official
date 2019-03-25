@@ -6,7 +6,7 @@
 
     RED.nodes.registerType('NGSI-LD-Entity',{
         category: 'NGSI_LD',
-        color: '#a6bbcf',
+        color: '#feb236',
         defaults: {
             name: { value: "" },
             endpoint: {
@@ -49,6 +49,13 @@
     <div class="form-row">
         <label for="node-input-ldContext"><i class="icon-tag"></i> JSON-LD @context</label>
         <input required type="url" id="node-input-ldContext" placeholder="NGSI-LD @context">
+    </div>
+    <div class="form-row">
+        <label for="node-input-mimeType"><i class="icon-tag"></i>Content Type</label>
+        <select id="node-input-mimeType">
+            <option value="application/json">JSON</option>
+            <option value="application/ld+json">JSON-LD</option>
+        </select>
     </div>
     <div class="form-row">
         <label for="node-input-mode"><i class="icon-tag"></i>Representation</label>

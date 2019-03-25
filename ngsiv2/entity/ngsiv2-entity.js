@@ -1,13 +1,11 @@
-
-const http = require("../../http.js");
+const http = require('../../http.js');
 
 module.exports = function(RED) {
-
-  const v2Prefix = "v2/entities";
+  const v2Prefix = 'v2/entities';
 
   function validate(config, msg) {
     let out = true;
-    if(!config.endpoint) {
+    if (!config.endpoint) {
       out = false;
     }
 
@@ -22,7 +20,7 @@ module.exports = function(RED) {
     RED.nodes.createNode(this, config);
     const node = this;
 
-    node.on("input", async function(msg) {
+    node.on('input', async function(msg) {
       if (!validate(config, msg)) {
         msg.payload = null;
         node.error('Node is not properly configured or no entity Id provided');
@@ -38,10 +36,10 @@ module.exports = function(RED) {
       let resource = `${endpoint}/${v2Prefix}/${entityId}`;
 
       if (mode === 'keyValues') {
-        resource += `?options=${mode}`
+        resource += `?options=${mode}`;
       }
 
-      let headers = Object.create(null);
+      const headers = Object.create(null);
       if (service.trim()) {
         headers['Fiware-Service'] = service;
       }
@@ -49,8 +47,7 @@ module.exports = function(RED) {
       let response = null;
       try {
         response = await http.get(resource, headers);
-      }
-      catch(e) {
+      } catch (e) {
         msg.payload = null;
         node.error(`Exception while retrieving entity: ${entityId}: ` + e);
         return;
@@ -59,15 +56,15 @@ module.exports = function(RED) {
       const statusCode = response.response.statusCode;
       if (statusCode === 200) {
         msg.payload = response.body;
-      }
-      else if (statusCode === 404) {
+      } else if (statusCode === 404) {
         msg.payload = null;
         node.error(`Entity ${entityId} not found`);
         return;
-      }
-      else {
+      } else {
         msg.payload = null;
-        node.error(`Entity ${entityId} could not be retrieved. HTTP status code: ${statusCode}`);
+        node.error(
+          `Entity ${entityId} could not be retrieved. HTTP status code: ${statusCode}`
+        );
         return;
       }
 
@@ -75,5 +72,5 @@ module.exports = function(RED) {
     });
   }
 
-  RED.nodes.registerType("NGSIv2-Entity", NgsiEntityNode);
+  RED.nodes.registerType('NGSIv2-Entity', NgsiEntityNode);
 };

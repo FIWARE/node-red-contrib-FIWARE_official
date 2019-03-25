@@ -1,18 +1,16 @@
-
-const http = require("../../http.js");
+const http = require('../../http.js');
 
 module.exports = function(RED) {
-
-  const ldPrefix = "ngsi-ld/v1/entities";
+  const ldPrefix = 'ngsi-ld/v1/entities';
 
   function validate(config, msg) {
     let out = true;
 
-    if(!config.endpoint) {
+    if (!config.endpoint) {
       out = false;
     }
 
-    if(!config.ldContext) {
+    if (!config.ldContext) {
       out = false;
     }
 
@@ -20,10 +18,10 @@ module.exports = function(RED) {
       out = false;
     }
 
+    // Id has to be a URI
     try {
-      const url = new URL(msg.payload);
-    }
-    catch(e) {
+      new URL(msg.payload);
+    } catch (e) {
       out = false;
     }
 
@@ -34,10 +32,12 @@ module.exports = function(RED) {
     RED.nodes.createNode(this, config);
     const node = this;
 
-    node.on("input", async function(msg) {
+    node.on('input', async function(msg) {
       if (!validate(config, msg)) {
         msg.payload = null;
-        node.error('Node is not properly configured, entity Id not provided or not a URI');
+        node.error(
+          'Node is not properly configured, entity Id not provided or not a URI'
+        );
         return;
       }
 
@@ -51,19 +51,18 @@ module.exports = function(RED) {
       let resource = `${endpoint}/${ldPrefix}/${entityId}`;
 
       if (mode === 'keyValues') {
-        resource += `?options=${mode}`
+        resource += `?options=${mode}`;
       }
 
       const linkHeaderValue = `<${ldContext}>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"`;
-      let headers = {
-        'Link': linkHeaderValue
+      const headers = {
+        Link: linkHeaderValue
       };
 
       let response = null;
       try {
         response = await http.get(resource, headers);
-      }
-      catch(e) {
+      } catch (e) {
         msg.payload = null;
         node.error(`Exception while retrieving entity: ${entityId}: ` + e);
         return;
@@ -72,15 +71,15 @@ module.exports = function(RED) {
       const statusCode = response.response.statusCode;
       if (statusCode === 200) {
         msg.payload = response.body;
-      }
-      else if (statusCode === 404) {
+      } else if (statusCode === 404) {
         msg.payload = null;
         node.error(`Entity ${entityId} not found`);
         return;
-      }
-      else {
+      } else {
         msg.payload = null;
-        node.error(`Entity ${entityId} could not be retrieved. HTTP status code: ${statusCode}`);
+        node.error(
+          `Entity ${entityId} could not be retrieved. HTTP status code: ${statusCode}`
+        );
         return;
       }
 
@@ -88,5 +87,5 @@ module.exports = function(RED) {
     });
   }
 
-  RED.nodes.registerType("NGSI-LD-Entity", NgsiEntityNode);
+  RED.nodes.registerType('NGSI-LD-Entity', NgsiEntityNode);
 };
