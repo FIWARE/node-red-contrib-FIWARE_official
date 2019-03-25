@@ -8,9 +8,9 @@
         category: 'NGSI_LD',
         color: '#feb236',
         defaults: {
-            name: { value: "" },
+            name: { value: '' },
             endpoint: {
-                value: "",
+                value: '',
                 required: true,
                 validate: function(v) {
                     try {
@@ -26,13 +26,14 @@
                 }
             },
             ldContext: { value: defLdContext },
-            mode: { value: "normalized" }
+            mode: { value: 'normalized' },
+            mimeType: { value: 'application/json' }
         },
         inputs: 1,
         outputs: 1,
-        icon: "file.png",
+        icon: 'file.png',
         label: function() {
-            return this.name || "NGSI-LD-Entity";
+            return this.name || 'NGSI-LD-Entity';
         }
     });
 </script>

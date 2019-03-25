@@ -18,7 +18,7 @@ module.exports = function(RED) {
       out = false;
     }
 
-    // Id has to be a URI
+    // Entity Id has to be a URI
     try {
       new URL(msg.payload);
     } catch (e) {
@@ -48,6 +48,8 @@ module.exports = function(RED) {
 
       const ldContext = config.ldContext;
 
+      const mimeType = config.mimeType;
+
       let resource = `${endpoint}/${ldPrefix}/${entityId}`;
 
       if (mode === 'keyValues') {
@@ -56,7 +58,8 @@ module.exports = function(RED) {
 
       const linkHeaderValue = `<${ldContext}>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"`;
       const headers = {
-        Link: linkHeaderValue
+        Link: linkHeaderValue,
+        Accept: mimeType
       };
 
       let response = null;

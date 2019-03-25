@@ -3,9 +3,9 @@
         category: 'FIWARE',
         color: '#fbefcc',
         defaults: {
-            name: { value: "" },
+            name: { value: '' },
             endpoint: {
-                value: "https://orion.lab.fiware.org",
+                value: 'https://orion.lab.fiware.org',
                 required: true,
                 validate: function(v) {
                     try {
@@ -20,29 +20,29 @@
                     }
                 }
             },
-            service: { value: "" },
-            mode: { value: "normalized" }
+            service: { value: '' },
+            mode: { value: 'normalized' }
         },
         inputs: 1,
         outputs: 1,
         icon: "file.png",
         label: function() {
-            return this.name || "NGSIv2-Entity";
+            return this.name || 'NGSIv2-Entity';
         }
     });
 </script>
 
 <script type="text/x-red" data-template-name="NGSIv2-Entity">
     <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <label for="node-input-name"><i class="icon-tag"></i>Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
     <div class="form-row">
-        <label for="node-input-endpoint"><i class="icon-tag"></i> Endpoint</label>
-        <input required type="url" id="node-input-endpoint" placeholder="https://orion.lab.fiware.org">
+        <label for="node-input-endpoint"><i class="icon-tag"></i>Endpoint</label>
+        <input required type="url" id="node-input-endpoint" placeholder="NGSIv2 endpoint">
     </div>
     <div class="form-row">
-        <label for="node-input-service"><i class="icon-tag"></i> Fiware-Service</label>
+        <label for="node-input-service"><i class="icon-tag"></i>Fiware-Service</label>
         <input type="text" id="node-input-service">
     </div>
     <div class="form-row">
