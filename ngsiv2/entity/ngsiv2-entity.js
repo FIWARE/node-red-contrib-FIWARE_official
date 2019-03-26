@@ -85,4 +85,5 @@ module.exports = function(RED) {
   }
 
   RED.nodes.registerType('NGSIv2-Entity', NgsiEntityNode);
+
 };

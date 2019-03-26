@@ -4,6 +4,19 @@
     const defLdContext =
         'https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/defaultContext/defaultContext.jsonld';
 
+    const endpointValidator = function(v) {
+        try {
+            const url = new URL(v);
+            if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+                return false;
+            }
+            return true;
+        }
+        catch(e) {
+            return false;
+        }
+    };
+
     RED.nodes.registerType('NGSI-LD-Entity',{
         category: 'NGSI_LD',
         color: '#feb236',
@@ -12,18 +25,7 @@
             endpoint: {
                 value: '',
                 required: true,
-                validate: function(v) {
-                    try {
-                        const url = new URL(v);
-                        if (url.protocol !== 'http:' && url.protocol !== 'https:') {
-                            return false;
-                        }
-                        return true;
-                    }
-                    catch(e) {
-                        return false;
-                    }
-                }
+                validate: endpointValidator
             },
             ldContext: { value: defLdContext },
             mode: { value: 'normalized' },
@@ -53,11 +55,11 @@
         <input required type="url" id="node-input-ldContext" placeholder="NGSI-LD @context">
     </div>
     <div class="form-row">
-        <label for="node-input-attrs"><i class="icon-tag"></i>Attributes</label>
+        <label for="node-input-attrs"><i class="icon-tag"></i>Attribute(s)</label>
         <input type="text" id="node-input-attrs">
     </div>
     <div class="form-row">
-        <label for="node-input-mimeType"><i class="icon-tag"></i>Content Type</label>
+        <label for="node-input-mimeType"><i class="icon-tag"></i>MIME Type</label>
         <select id="node-input-mimeType">
             <option value="application/json">JSON</option>
             <option value="application/ld+json">JSON-LD</option>
@@ -73,6 +75,7 @@
 </script>
 
 <script type="text/x-red" data-help-name="NGSI-LD-Entity">
-    <p>A simple node that allows to obtain an NGSI-LD Entity. Entity id shall be provided as part of the msg.payload
+    <p>
+    A simple node that allows to obtain an NGSI-LD Entity. Entity id shall be provided as part of the msg.payload
     </p>
 </script>

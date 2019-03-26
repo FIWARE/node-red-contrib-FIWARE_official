@@ -1,21 +1,39 @@
 <script type="text/javascript">
+
+    const endpointValidator = function(v) {
+        try {
+            const url = new URL(v);
+            if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+                return false;
+            }
+            return true;
+        }
+        catch(e) {
+            return false;
+        }
+    };
+
     RED.nodes.registerType('NGSIv2-Dataset',{
         category: 'FIWARE',
         color: '#a6bbcf',
         defaults: {
-            name: { value: "" },
-            endpoint: { value: "https://orion.lab.fiware.org" },
-            service: { value: "" },
-            type: { value: "" },
-            attrs: { value: "" },
-            q: { value: "" },
-            options: { value: "" }
+            name: { value: '' },
+            endpoint: {
+                value: 'https://orion.lab.fiware.org',
+                required: true,
+                validate: endpointValidator
+            },
+            service: { value: '' },
+            entityType: { value: '' },
+            attrs: { value: '' },
+            q: { value: '' },
+            mode: { value: 'normalized' }
         },
         inputs:  1,
         outputs: 1,
-        icon: "file.png",
+        icon: 'file.png',
         label: function() {
-            return this.name || "NGSIv2-Dataset";
+            return this.name || 'NGSIv2-Dataset';
         }
     });
 </script>
@@ -27,27 +45,30 @@
     </div>
     <div class="form-row">
         <label for="node-input-endpoint"><i class="icon-tag"></i> Endpoint</label>
-        <input type="text" id="node-input-endpoint" placeholder="https://orion.lab.fiware.org">
+        <input type="text" id="node-input-endpoint" placeholder="NGSIv2 endpoint">
     </div>
     <div class="form-row">
         <label for="node-input-service"><i class="icon-tag"></i> Fiware-Service</label>
         <input type="text" id="node-input-service">
     </div>
     <div class="form-row">
-        <label for="node-input-type"><i class="icon-tag"></i> Entity Type</label>
-        <input type="text" id="node-input-entity-type">
+        <label for="node-input-entityType"><i class="icon-tag"></i> Entity Type(s)</label>
+        <input type="text" id="node-input-entityType">
     </div>
     <div class="form-row">
-        <label for="node-input-attrs"><i class="icon-tag"></i> Entity Attributes</label>
-        <input type="text" id="node-input-entity-attrs">
+        <label for="node-input-attrs"><i class="icon-tag"></i> Attribute(s)</label>
+        <input type="text" id="node-input-attrs">
     </div>
     <div class="form-row">
         <label for="node-input-q"><i class="icon-tag"></i> Filter</label>
         <input type="text" id="node-input-q">
     </div>
     <div class="form-row">
-        <label for="node-input-options"><i class="icon-tag"></i>Options</label>
-        <input type="text" id="node-input-options">
+        <label for="node-input-mode"><i class="icon-tag"></i> Representation</label>
+        <select id="node-input-mode">
+            <option value="normalized">normalized</option>
+            <option value="keyValues">keyValues</option>
+        </select>
     </div>
 </script>
 

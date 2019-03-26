@@ -10,7 +10,7 @@
   "node-red": {
     "nodes": {
       "NGSIv2-Entity": "ngsiv2/entity/ngsiv2-entity.js",
-      "NGSI-Dataset": "ngsiv2/dataset/ngsiv2-dataset.js",
+      "NGSIv2-Dataset": "ngsiv2/dataset/ngsiv2-dataset.js",
       "NGSI-LD-Entity": "ngsi-ld/entity/ngsi-ld-entity.js"
     }
   },
