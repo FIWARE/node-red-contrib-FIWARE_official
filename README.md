@@ -10,8 +10,5 @@ Official Node-Red FIWARE integration
 
 Supported Nodes: 
 
-* NGSI-LD Entity
-* NGSIv2 Entity
-
-* NGSI-LD Dataset
-* NGSIv2 Dataset
+* NGSI(v2,LD) Entity
+* NGSI(v2,LD) Dataset
