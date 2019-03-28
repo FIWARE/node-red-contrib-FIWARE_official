@@ -1,3 +1,4 @@
+
 {
   "name": "node-red-contrib-FIWARE_official",
   "version": "0.1.0",
@@ -9,9 +10,8 @@
   },
   "node-red": {
     "nodes": {
-      "NGSIv2-Entity": "ngsiv2/entity/ngsiv2-entity.js",
-      "NGSIv2-Dataset": "ngsiv2/dataset/ngsiv2-dataset.js",
-      "NGSI-LD-Entity": "ngsi-ld/entity/ngsi-ld-entity.js"
+      "Entity": "NGSI/entity/entity.js",
+      "Dataset": "NGSI/dataset/dataset.js"
     }
   },
   "repository": {

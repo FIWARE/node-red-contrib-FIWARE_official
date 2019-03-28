@@ -2,11 +2,11 @@
 
 require('should');
 const helper = require('node-red-node-test-helper');
-const testedNode = require('../ngsiv2/entity/ngsiv2-entity.js');
+const testedNode = require('../NGSI/entity/entity.js');
 
 helper.init(require.resolve('node-red'));
 
-describe('NGSIv2 Node', function() {
+describe('NGSI Node', function() {
   before(function(done) {
     helper.startServer(done);
   });
@@ -21,7 +21,7 @@ describe('NGSIv2 Node', function() {
   });
 
   it('should be loaded', function(done) {
-    const flow = [{ id: 'testedNode', type: 'NGSIv2-Entity', name: 'tested' }];
+    const flow = [{ id: 'testedNode', type: 'NGSI-Entity', name: 'tested' }];
 
     helper.load(testedNode, flow, function() {
       const testedNode = helper.getNode('testedNode');
@@ -34,7 +34,7 @@ describe('NGSIv2 Node', function() {
     const flow = [
       {
         id: 'testedNode',
-        type: 'NGSIv2-Entity',
+        type: 'NGSI-Entity',
         name: 'tested',
         wires: [['helperNode']],
         endpoint: 'https://orion.lab.fiware.org',

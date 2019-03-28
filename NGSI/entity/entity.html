@@ -1,4 +1,4 @@
-<!-- NGSI-LD Entity Config UI -->
+<!-- NGSI Entity Config UI -->
 <!-- Copyright (c) 2019 FIWARE Foundation e.V. -->
 <script type="text/javascript">
     const defLdContext =
@@ -17,8 +17,8 @@
         }
     };
 
-    RED.nodes.registerType('NGSI-LD-Entity',{
-        category: 'NGSI_LD',
+    RED.nodes.registerType('NGSI-Entity',{
+        category: 'NGSI',
         color: '#feb236',
         defaults: {
             name: { value: '' },
@@ -27,42 +27,78 @@
                 required: true,
                 validate: endpointValidator
             },
+            protocol: {
+                'value': 'LD'
+            },
+            service: {
+                'value': ''
+            },
             ldContext: { value: defLdContext },
             mode: { value: 'normalized' },
-            mimeType: { value: 'application/json' },
+            mimeType: { value: 'application/ld+json' },
             attrs: { value: '' }
         },
         inputs: 1,
         outputs: 1,
         icon: 'file.png',
         label: function() {
-            return this.name || 'NGSI-LD-Entity';
+            return this.name || 'NGSI Entity';
         }
     });
+
+    function protocolChanged(e) {
+      if (e.target.value ==  'v2') {
+          toggleV2();
+      }
+      else {
+          toggleLD();
+      }
+    }
+
+    function toggleLD() {
+        document.getElementById('ldContext').hidden = false;
+        document.getElementById('mimeType').hidden = false;
+    }
+
+    function toggleV2() {
+       document.getElementById('ldContext').hidden = true;
+       document.getElementById('mimeType').hidden = true;
+    }
 </script>
 
-<script type="text/x-red" data-template-name="NGSI-LD-Entity">
+<script type="text/x-red" data-template-name="NGSI-Entity">
     <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
     <div class="form-row">
         <label for="node-input-endpoint"><i class="icon-tag"></i> Endpoint</label>
-        <input required type="url" id="node-input-endpoint" placeholder="NGSI-LD endpoint URL">
+        <input required type="url" id="node-input-endpoint" placeholder="https://orion.lab.fiware.org">
     </div>
     <div class="form-row">
+        <label for="node-input-protocol"><i class="icon-tag"></i> Protocol</label>
+        <select id="node-input-protocol" onchange="protocolChanged(event)">
+            <option value="LD" selected>NGSI-LD</option>
+            <option value="v2">NGSIv2</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-service"><i class="icon-tag"></i> Fiware-Service</label>
+        <input type="text" id="node-input-service">
+    </div>
+    <div class="form-row" id="ldContext">
         <label for="node-input-ldContext"><i class="icon-tag"></i> JSON-LD @context</label>
         <input required type="url" id="node-input-ldContext" placeholder="NGSI-LD @context">
     </div>
     <div class="form-row">
-        <label for="node-input-attrs"><i class="icon-tag"></i>Attribute(s)</label>
+        <label for="node-input-attrs"><i class="icon-tag"></i> Attribute(s)</label>
         <input type="text" id="node-input-attrs">
     </div>
-    <div class="form-row">
-        <label for="node-input-mimeType"><i class="icon-tag"></i>MIME Type</label>
+    <div class="form-row" id="mimeType">
+        <label for="node-input-mimeType"><i class="icon-tag"></i> MIME Type</label>
         <select id="node-input-mimeType">
             <option value="application/json">JSON</option>
-            <option value="application/ld+json">JSON-LD</option>
+            <option value="application/ld+json" selected>JSON-LD</option>
         </select>
     </div>
     <div class="form-row">
@@ -74,8 +110,8 @@
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="NGSI-LD-Entity">
+<script type="text/x-red" data-help-name="NGSI-Entity">
     <p>
-    A simple node that allows to obtain an NGSI-LD Entity. Entity id shall be provided as part of the msg.payload
+    A simple node that allows to obtain an NGSI(LD,v2) Entity. Entity id shall be provided as part of the msg.payload
     </p>
 </script>
