@@ -2,7 +2,7 @@
 
 require('should');
 const helper = require('node-red-node-test-helper');
-const testedNode = require('../NGSI/entity/entity.js');
+const testedNode = require('../src/nodes/NGSI/entity/entity.js');
 
 helper.init(require.resolve('node-red'));
 

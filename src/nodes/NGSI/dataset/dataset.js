@@ -1,8 +1,8 @@
-const http = require('../../http.js');
+const http = require('../../../http.js');
+const common = require('../../../common.js');
+
 
 module.exports = function(RED) {
-  const v2Prefix = '/v2/entities/';
-
   function validate(config) {
     let out = true;
     if (!config.endpoint) {
@@ -36,15 +36,6 @@ module.exports = function(RED) {
     return out.join('&');
   }
 
-  function buildHeaders(config) {
-    const headers = Object.create(null);
-    if (config.service && config.service.trim()) {
-      headers['Fiware-Service'] = config.service;
-    }
-
-    return headers;
-  }
-
   function NgsiDatasetNode(config) {
     RED.nodes.createNode(this, config);
     const node = this;
@@ -60,8 +51,8 @@ module.exports = function(RED) {
       const parameters = buildParameters(config);
 
       const response = await http.get(
-        `${endpoint}/${v2Prefix}?${parameters}`,
-        buildHeaders(config)
+        `${endpoint}/${common.apiPrefix(config)}?${parameters}`,
+        common.buildHeaders(config)
       );
 
       const statusCode = response.response.statusCode;
@@ -78,5 +69,5 @@ module.exports = function(RED) {
     });
   }
 
-  RED.nodes.registerType('NGSIv2-Dataset', NgsiDatasetNode);
+  RED.nodes.registerType('NGSI-Dataset', NgsiDatasetNode);
 };

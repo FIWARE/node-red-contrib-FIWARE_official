@@ -10,8 +10,8 @@
   },
   "node-red": {
     "nodes": {
-      "Entity": "NGSI/entity/entity.js",
-      "Dataset": "NGSI/dataset/dataset.js"
+      "Entity": "src/nodes/NGSI/entity/entity.js",
+      "Dataset": "src/nodes/NGSI/dataset/dataset.js"
     }
   },
   "repository": {

@@ -1,22 +1,8 @@
-const http = require('../../http.js');
+const http = require('../../../http.js');
+const common = require('../../../common.js');
+
 
 module.exports = function(RED) {
-  const ldPrefix = 'ngsi-ld/v1/entities';
-
-  const v2Prefix = 'v2/entities';
-
-  function apiPrefix(config) {
-    if (isLD(config)) {
-      return ldPrefix;
-    }
-    
-      return v2Prefix;
-    
-  }
-
-  function isLD(config) {
-    return config.protocol === 'LD';
-  }
 
   function validate(config, msg) {
     let out = true;
@@ -25,7 +11,7 @@ module.exports = function(RED) {
       out = false;
     }
 
-    if (isLD(config) && !config.ldContext) {
+    if (common.isLD(config) && !config.ldContext) {
       out = false;
     }
 
@@ -34,7 +20,7 @@ module.exports = function(RED) {
     }
 
     // Entity Id has to be a URI if LD protocol
-    if (isLD(config)) {
+    if (common.isLD(config)) {
       try {
         new URL(msg.payload);
       } catch (e) {
@@ -45,21 +31,6 @@ module.exports = function(RED) {
     return out;
   }
 
-  function buildHeaders(config) {
-    const headers = Object.create(null);
-
-    if (isLD(config)) {
-      const linkHeaderValue = `<${config.ldContext}>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"`;
-      headers.Link = linkHeaderValue;
-      headers.Accept = config.mimeType;
-    }
-
-    if (config.service && config.service.trim()) {
-      headers['Fiware-Service'] = config.service;
-    }
-
-    return headers;
-  }
 
   function NgsiEntityNode(config) {
     RED.nodes.createNode(this, config);
@@ -83,7 +54,7 @@ module.exports = function(RED) {
 
       const parameters = [];
 
-      let resource = `${endpoint}/${apiPrefix(config)}/${entityId}`;
+      let resource = `${endpoint}/${common.apiPrefix(config)}/${entityId}`;
 
       if (mode === 'keyValues') {
         parameters.push(`options=${mode}`);
@@ -99,7 +70,7 @@ module.exports = function(RED) {
 
       let response = null;
       try {
-        response = await http.get(resource, buildHeaders(config));
+        response = await http.get(resource, common.buildHeaders(config));
       } catch (e) {
         msg.payload = null;
         node.error(`Exception while retrieving entity: ${entityId}: ` + e);
