@@ -32,8 +32,19 @@ function buildHeaders(config) {
   return headers;
 }
 
+function getParam(paramName, config, msg) {
+  let paramValue = msg && msg[paramName] && msg[paramName].trim();
+
+  if (!paramValue) {
+    paramValue = config[paramName] && config[paramName].trim();
+  }
+
+  return paramValue;
+}
+
 module.exports = {
   apiPrefix,
   isLD,
-  buildHeaders
+  buildHeaders,
+  getParam
 };

@@ -1,9 +1,7 @@
 const http = require('../../../http.js');
 const common = require('../../../common.js');
 
-
 module.exports = function(RED) {
-
   function validate(config, msg) {
     let out = true;
 
@@ -15,7 +13,11 @@ module.exports = function(RED) {
       out = false;
     }
 
-    if (!msg.payload || !msg.payload.trim()) {
+    if (
+      !msg.payload ||
+      !(typeof msg.payload === 'string') ||
+      !msg.payload.trim()
+    ) {
       out = false;
     }
 
@@ -30,7 +32,6 @@ module.exports = function(RED) {
 
     return out;
   }
-
 
   function NgsiEntityNode(config) {
     RED.nodes.createNode(this, config);

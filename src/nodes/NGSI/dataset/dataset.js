@@ -1,36 +1,37 @@
 const http = require('../../../http.js');
 const common = require('../../../common.js');
 
-
 module.exports = function(RED) {
-  function validate(config) {
+  function validate(config, payload) {
     let out = true;
     if (!config.endpoint) {
       out = false;
     }
 
-    if (!config.entityType || config.entityType.trim() === '') {
+    if (!common.getParam('entityType', config, payload)) {
       out = false;
     }
 
     return out;
   }
 
-  function buildParameters(config) {
+  function buildParameters(config, payload) {
     const out = [];
 
-    out.push(`type=${config.entityType}`);
+    out.push(`type=${common.getParam('entityType', config, payload)}`);
 
     if (config.mode && config.mode === 'keyValues') {
       out.push(`options=${config.mode}`);
     }
 
-    if (config.attrs && config.attrs.trim()) {
-      out.push(`attrs=${config.attrs}`);
+    const attrs = common.getParam('attrs', config, payload);
+    if (attrs) {
+      out.push(`attrs=${attrs}`);
     }
 
-    if (config.q && config.q.trim()) {
-      out.push(`q=${config.q}`);
+    const q = common.getParam('q', config, payload);
+    if (q) {
+      out.push(`q=${q}`);
     }
 
     return out.join('&');
@@ -41,14 +42,14 @@ module.exports = function(RED) {
     const node = this;
 
     node.on('input', async function(msg) {
-      if (!validate(config)) {
+      if (!validate(config, msg.payload)) {
         msg.payload = null;
         node.error('Node is not properly configured, entity type not provided');
         return;
       }
 
       const endpoint = config.endpoint;
-      const parameters = buildParameters(config);
+      const parameters = buildParameters(config, msg.payload);
 
       const response = await http.get(
         `${endpoint}/${common.apiPrefix(config)}?${parameters}`,
