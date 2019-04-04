@@ -19,6 +19,31 @@ function get(resource, headers) {
   });
 }
 
+function post(resource, data, headers) {
+    headers = headers || {
+        'Content-Type': 'application/json'
+    };
+
+    return new Promise(function(resolve, reject) {
+        const options = {
+            method: 'POST',
+            uri: resource,
+            body: data,
+            headers,
+            simple: false,
+            json: true // Automatically stringifies the body to JSON
+        };
+
+        request(options, function(error, response, body) {
+            return error ? reject(error) : resolve({
+                response,
+                body
+            });
+        });
+    });
+}
+
 module.exports = {
-  get
+  get,
+  post
 };
