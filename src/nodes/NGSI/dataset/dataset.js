@@ -1,41 +1,42 @@
 const http = require('../../../http.js');
 const common = require('../../../common.js');
 
+function validate(config, payload) {
+  let out = true;
+  if (!config.endpoint) {
+    out = false;
+  }
+
+  if (!common.getParam('entityType', config, payload)) {
+    out = false;
+  }
+
+  return out;
+}
+
+function buildParameters(config, payload) {
+  const out = [];
+
+  out.push(`type=${common.getParam('entityType', config, payload)}`);
+
+  if (config.mode && config.mode === 'keyValues') {
+    out.push(`options=${config.mode}`);
+  }
+
+  const attrs = common.getParam('attrs', config, payload);
+  if (attrs) {
+    out.push(`attrs=${attrs}`);
+  }
+
+  const q = common.getParam('q', config, payload);
+  if (q) {
+    out.push(`q=${q}`);
+  }
+
+  return out.join('&');
+}
+
 module.exports = function(RED) {
-  function validate(config, payload) {
-    let out = true;
-    if (!config.endpoint) {
-      out = false;
-    }
-
-    if (!common.getParam('entityType', config, payload)) {
-      out = false;
-    }
-
-    return out;
-  }
-
-  function buildParameters(config, payload) {
-    const out = [];
-
-    out.push(`type=${common.getParam('entityType', config, payload)}`);
-
-    if (config.mode && config.mode === 'keyValues') {
-      out.push(`options=${config.mode}`);
-    }
-
-    const attrs = common.getParam('attrs', config, payload);
-    if (attrs) {
-      out.push(`attrs=${attrs}`);
-    }
-
-    const q = common.getParam('q', config, payload);
-    if (q) {
-      out.push(`q=${q}`);
-    }
-
-    return out.join('&');
-  }
 
   function NgsiDatasetNode(config) {
     RED.nodes.createNode(this, config);

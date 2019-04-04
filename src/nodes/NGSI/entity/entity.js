@@ -1,37 +1,56 @@
 const http = require('../../../http.js');
 const common = require('../../../common.js');
 
-module.exports = function(RED) {
-  function validate(config, msg) {
-    let out = true;
+function validate(config, msg) {
+  let out = true;
 
-    if (!config.endpoint) {
-      out = false;
-    }
+  if (!config.endpoint) {
+    out = false;
+  }
 
-    if (common.isLD(config) && !config.ldContext) {
-      out = false;
-    }
+  if (common.isLD(config) && !config.ldContext) {
+    out = false;
+  }
 
-    if (
+  if (
       !msg.payload ||
       !(typeof msg.payload === 'string') ||
       !msg.payload.trim()
-    ) {
+  ) {
+    out = false;
+  }
+
+  // Entity Id has to be a URI if LD protocol
+  if (common.isLD(config)) {
+    try {
+      new URL(msg.payload);
+    } catch (e) {
       out = false;
     }
-
-    // Entity Id has to be a URI if LD protocol
-    if (common.isLD(config)) {
-      try {
-        new URL(msg.payload);
-      } catch (e) {
-        out = false;
-      }
-    }
-
-    return out;
   }
+
+  return out;
+}
+
+function buildParameters(config, payload) {
+  const parameters = [];
+
+  const mode = config.mode;
+
+  const attrs = config.attrs;
+
+  if (mode === 'keyValues') {
+    parameters.push(`options=${mode}`);
+  }
+
+  if (attrs && attrs.trim()) {
+    parameters.push(`attrs=${attrs}`);
+  }
+
+  return parameters.join('&');
+}
+
+module.exports = function(RED) {
 
   function NgsiEntityNode(config) {
     RED.nodes.createNode(this, config);
@@ -47,26 +66,14 @@ module.exports = function(RED) {
       }
 
       const entityId = msg.payload;
-
       const endpoint = config.endpoint;
-      const mode = config.mode;
-
-      const attrs = config.attrs;
-
-      const parameters = [];
 
       let resource = `${endpoint}/${common.apiPrefix(config)}/${entityId}`;
 
-      if (mode === 'keyValues') {
-        parameters.push(`options=${mode}`);
-      }
-
-      if (attrs && attrs.trim()) {
-        parameters.push(`attrs=${attrs}`);
-      }
+      const parameters = buildParameters(config, msg.payload);
 
       if (parameters.length > 0) {
-        resource += `?${parameters.join('&')}`;
+        resource += `?${parameters}`;
       }
 
       let response = null;
@@ -79,18 +86,20 @@ module.exports = function(RED) {
       }
 
       const statusCode = response.response.statusCode;
-      if (statusCode === 200) {
-        msg.payload = response.body;
-      } else if (statusCode === 404) {
-        msg.payload = null;
-        node.error(`Entity ${entityId} not found`);
-        return;
-      } else {
-        msg.payload = null;
-        node.error(
-          `Entity ${entityId} could not be retrieved. HTTP status code: ${statusCode}`
-        );
-        return;
+      switch (statusCode) {
+        case 200:
+          msg.payload = response.body;
+          break;
+        case 404:
+          msg.payload = null;
+          node.error(`Entity ${entityId} not found`);
+          return;
+        default:
+          msg.payload = null;
+          node.error(
+              `Entity ${entityId} could not be retrieved. HTTP status code: ${statusCode}`
+          );
+          return;
       }
 
       node.send(msg);
