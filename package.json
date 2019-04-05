@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha \"test/**/*_spec.js\"",
     "lint": "eslint . --cache --fix",
-    "prettier": "prettier --single-quote --parser flow --write **/*.js *.js"
+    "prettier": "prettier --single-quote --parser flow --write \"**/*.js\" *.js"
   },
   "node-red": {
     "nodes": {

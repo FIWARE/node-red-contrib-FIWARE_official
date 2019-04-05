@@ -1,3 +1,15 @@
+/**
+ *
+ *   NGSI Updater Node
+ *
+ *   What it gets from the payload is POSTed to an NGSI(v2, LD) endpoint
+ *
+ *   Copyright (c) 2019 FIWARE Foundation e.V.
+ *
+ *   @author José M. Cantera
+ *
+ */
+
 const http = require('../../../http.js');
 const common = require('../../../common.js');
 
@@ -12,11 +24,17 @@ function validate(config, msg) {
     out = false;
   }
 
-  if (
-      !msg.payload ||
-      !(typeof msg.payload === 'string') ||
-      !msg.payload.trim()
-  ) {
+  const payload = msg.payload;
+
+  if (!payload) {
+    out = false;
+  }
+
+  if (typeof payload !== 'string' && typeof payload !== 'object') {
+    out = false;
+  }
+
+  if (typeof payload === 'string' && !payload.trim()) {
     out = false;
   }
 
@@ -24,40 +42,47 @@ function validate(config, msg) {
 }
 
 function buildPayloadV2(config, payload) {
-  let data = null;
+  let data = payload;
 
-  try {
-    data = JSON.parse(payload);
-  }
-  catch(e) {
-      throw "Invalid payload. Not valid JSON";
+  if (typeof data === 'string') {
+    try {
+      data = JSON.parse(payload);
+    } catch (e) {
+      throw new Error('Invalid payload. Not valid JSON');
+    }
   }
 
   if (!(typeof data === 'object')) {
-    throw "Invalid payload. Not an object nor an Array";
+    throw new Error('Invalid payload. Not an object nor an Array');
   }
 
   let entityData = data;
   if (!Array.isArray(data)) {
-      entityData = [data];
+    entityData = [data];
   }
 
   const out = {
-    'actionType': 'append',
-    'entities': entityData
+    actionType: 'append',
+    entities: entityData
   };
 
   return out;
 }
 
-
+// eslint-disable-next-line
 function buildPayloadLD(config, payload) {
   return {};
 }
 
+function buildPayload(config, payload) {
+  if (common.isLD(config)) {
+    return buildPayloadLD(config, payload);
+  }
+
+  return buildPayloadV2(config, payload);
+}
 
 module.exports = function(RED) {
-
   function NgsiUpdaterNode(config) {
     RED.nodes.createNode(this, config);
     const node = this;
@@ -65,21 +90,23 @@ module.exports = function(RED) {
     node.on('input', async function(msg) {
       if (!validate(config, msg)) {
         msg.payload = null;
-        node.error(
-          'Node is not properly configured, Entity data not provided'
-        );
+        node.error('Node is not properly configured, Entity data not provided');
         return;
       }
 
       const endpoint = config.endpoint;
 
-      let resource = `${endpoint}/${common.apiPrefix(config)}/op/update`;
+      const resource = `${endpoint}/${common.apiPrefix(config)}/op/update`;
 
       let response = null;
       try {
-        const payload = buildPayloadV2(config, msg.payload);
+        const payload = buildPayload(config, msg.payload);
 
-        response = await http.post(resource, payload, common.buildHeaders(config));
+        response = await http.post(
+          resource,
+          payload,
+          common.buildHeaders(config)
+        );
       } catch (e) {
         msg.payload = null;
         node.error(`Exception while POSTing Entity data: ` + e);
@@ -89,6 +116,7 @@ module.exports = function(RED) {
       const statusCode = response.response.statusCode;
       switch (statusCode) {
         case 200:
+        case 204:
           msg.payload = statusCode;
           break;
         case 404:
@@ -97,9 +125,12 @@ module.exports = function(RED) {
           return;
         default:
           msg.payload = null;
+
           node.error(
-              `Entity data could not be updated. HTTP status code: ${statusCode}`
+            `Entity data could not be updated. HTTP status code: ${statusCode}`
           );
+
+          console.error(response.body); // eslint-disable-line
           return;
       }
 

@@ -1,3 +1,15 @@
+/**
+ *
+ *   NGSI Dataset node
+ *
+ *   Given an Entity type, attributes and a filter outputs the corresponding dastaset
+ *
+ *   Copyright (c) 2019 FIWARE Foundation e.V.
+ *
+ *   @author José M. Cantera
+ *
+ */
+
 const http = require('../../../http.js');
 const common = require('../../../common.js');
 
@@ -37,7 +49,6 @@ function buildParameters(config, payload) {
 }
 
 module.exports = function(RED) {
-
   function NgsiDatasetNode(config) {
     RED.nodes.createNode(this, config);
     const node = this;
@@ -53,7 +64,7 @@ module.exports = function(RED) {
       const parameters = buildParameters(config, msg.payload);
 
       const response = await http.get(
-        `${endpoint}/${common.apiPrefix(config)}?${parameters}`,
+        `${endpoint}/${common.apiPrefix(config)}/entities/?${parameters}`,
         common.buildHeaders(config)
       );
 

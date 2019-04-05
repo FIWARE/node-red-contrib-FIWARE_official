@@ -1,3 +1,16 @@
+/**
+ *
+ *   NGSI Entity Node
+ *
+ *   Given an Entity Id in the payload outputs its content
+ *
+ *   Copyright (c) 2019 FIWARE Foundation e.V.
+ *
+ *   @author José M. Cantera
+ *
+ *
+ */
+
 const http = require('../../../http.js');
 const common = require('../../../common.js');
 
@@ -13,9 +26,9 @@ function validate(config, msg) {
   }
 
   if (
-      !msg.payload ||
-      !(typeof msg.payload === 'string') ||
-      !msg.payload.trim()
+    !msg.payload ||
+    !(typeof msg.payload === 'string') ||
+    !msg.payload.trim()
   ) {
     out = false;
   }
@@ -32,7 +45,7 @@ function validate(config, msg) {
   return out;
 }
 
-function buildParameters(config, payload) {
+function buildParameters(config) {
   const parameters = [];
 
   const mode = config.mode;
@@ -51,7 +64,6 @@ function buildParameters(config, payload) {
 }
 
 module.exports = function(RED) {
-
   function NgsiEntityNode(config) {
     RED.nodes.createNode(this, config);
     const node = this;
@@ -68,9 +80,11 @@ module.exports = function(RED) {
       const entityId = msg.payload;
       const endpoint = config.endpoint;
 
-      let resource = `${endpoint}/${common.apiPrefix(config)}/${entityId}`;
+      let resource = `${endpoint}/${common.apiPrefix(
+        config
+      )}/entities/${entityId}`;
 
-      const parameters = buildParameters(config, msg.payload);
+      const parameters = buildParameters(config);
 
       if (parameters.length > 0) {
         resource += `?${parameters}`;
@@ -97,7 +111,7 @@ module.exports = function(RED) {
         default:
           msg.payload = null;
           node.error(
-              `Entity ${entityId} could not be retrieved. HTTP status code: ${statusCode}`
+            `Entity ${entityId} could not be retrieved. HTTP status code: ${statusCode}`
           );
           return;
       }

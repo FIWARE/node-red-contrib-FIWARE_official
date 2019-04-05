@@ -1,6 +1,6 @@
-const ldPrefix = 'ngsi-ld/v1/entities';
+const ldPrefix = 'ngsi-ld/v1';
 
-const v2Prefix = 'v2/entities';
+const v2Prefix = 'v2';
 
 function apiPrefix(config) {
   if (isLD(config)) {
