@@ -70,9 +70,10 @@ module.exports = function(RED) {
 
     node.on('input', async function(msg) {
       if (!validate(config, msg)) {
-        msg.payload = null;
+        msg.payload = 'Bad Configuration';
         node.error(
-          'Node is not properly configured, entity Id not provided or not a URI'
+          'Node is not properly configured, entity Id not provided or not a URI',
+          msg
         );
         return;
       }
@@ -94,8 +95,8 @@ module.exports = function(RED) {
       try {
         response = await http.get(resource, common.buildHeaders(config));
       } catch (e) {
-        msg.payload = null;
-        node.error(`Exception while retrieving entity: ${entityId}: ` + e);
+        msg.payload = { e };
+        node.error(`Exception while retrieving entity: ${entityId}: ` + e, msg);
         return;
       }
 
@@ -103,20 +104,19 @@ module.exports = function(RED) {
       switch (statusCode) {
         case 200:
           msg.payload = response.body;
+          node.send(msg);
           break;
         case 404:
-          msg.payload = null;
-          node.error(`Entity ${entityId} not found`);
-          return;
+          msg.payload = { statusCode };
+          node.error(`Entity ${entityId} not found`, msg);
+          break;
         default:
-          msg.payload = null;
+          msg.payload = { statusCode };
           node.error(
-            `Entity ${entityId} could not be retrieved. HTTP status code: ${statusCode}`
+            `Entity ${entityId} could not be retrieved. HTTP status code: ${statusCode}`,
+            msg
           );
-          return;
       }
-
-      node.send(msg);
     });
   }
 

@@ -28,10 +28,13 @@
                 validate: endpointValidator
             },
             protocol: {
-                'value': 'LD'
+                value: 'LD'
             },
             service: {
-                'value': ''
+                value: ''
+            },
+            updateMode: {
+              value: 'upsert'
             },
             ldContext: { value: defLdContext },
             mimeType: { value: 'application/ld+json' }
@@ -83,6 +86,14 @@
     <div class="form-row">
         <label for="node-input-service"><i class="icon-tag"></i> Fiware-Service</label>
         <input type="text" id="node-input-service">
+    </div>
+    <div class="form-row">
+        <label for="node-input-updateMode"><i class="icon-tag"></i> Update Mode</label>
+        <select id="node-input-updateMode">
+            <option value="upsert" selected>upsert</option>
+            <option value="update">update</option>
+            <option value="update-noOverwrite" selected>update-noOverwrite</option>
+        </select>
     </div>
     <div class="form-row" id="ldContext">
         <label for="node-input-ldContext"><i class="icon-tag"></i> JSON-LD @context</label>
