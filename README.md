@@ -12,3 +12,4 @@ Supported Nodes:
 
 * NGSI(v2,LD) Entity
 * NGSI(v2,LD) Dataset
+* NGSI(v2,LD) Updater
