@@ -1,6 +1,7 @@
 /* eslint-env node, mocha */
 
-require('should');
+const assert = require('chai').assert;
+
 const http = require('../src/http.js');
 
 const helper = require('node-red-node-test-helper');
@@ -27,7 +28,7 @@ describe('NGSI Entity Node', function() {
       service: TENANT,
       protocol: 'V2' // V2 for the time being. LD also supported
     },
-    {id: 'helperNode', type: 'helper'}
+    { id: 'helperNode', type: 'helper' }
   ];
 
   before(done => {
@@ -36,57 +37,65 @@ describe('NGSI Entity Node', function() {
     });
   });
 
-  afterEach(function (done) {
+  afterEach(function(done) {
     helper.unload();
     done();
   });
 
-  after(function (done) {
+  after(function(done) {
     http.del(`${ENDPOINT}/v2/entities/${data.id}`, HEADERS).then(() => {
       helper.stopServer(done);
     });
   });
 
-  it('should be loaded', function (done) {
-    const flow = [{id: 'testedNode', type: 'NGSI-Entity', name: 'tested'}];
+  it('should be loaded', function(done) {
+    const flow = [{ id: 'testedNode', type: 'NGSI-Entity', name: 'tested' }];
 
-    helper.load(testedNode, flow, function () {
-      const testedNode = helper.getNode('testedNode');
-      testedNode.should.have.property('name', 'tested');
-      done();
+    helper.load(testedNode, flow, function() {
+      try {
+        const testedNode = helper.getNode('testedNode');
+        assert.propertyVal(testedNode, 'name', 'tested');
+        done();
+      } catch (e) {
+        done(e);
+      }
     });
   });
 
-  it('should retrieve Entity', function (done) {
+  it('should retrieve Entity', function(done) {
     const entityId =
-        'urn:ngsi-ld:AgriCrop:df72dc57-1eb9-42a3-88a9-8647ecc954b4';
+      'urn:ngsi-ld:AgriCrop:df72dc57-1eb9-42a3-88a9-8647ecc954b4';
 
     helper.load(testedNode, entityFlow, function test() {
       const helperNode = helper.getNode('helperNode');
       const testedNode = helper.getNode('testedNode');
 
-      helperNode.on('input', function (msg) {
-        const entity = JSON.parse(msg.payload);
-        entity.should.have.property('id', entityId);
-        done();
+      helperNode.on('input', function(msg) {
+        try {
+          const entity = JSON.parse(msg.payload);
+          assert.propertyVal(entity, 'id', entityId);
+          done();
+        } catch (e) {
+          done(e);
+        }
       });
 
       testedNode.on('call:error', () => {
         done('Error called on node!!');
       });
 
-      testedNode.receive({payload: entityId});
+      testedNode.receive({ payload: entityId });
     });
   });
 
-  it('should retrieve nothing', function (done) {
+  it('should retrieve nothing', function(done) {
     const entityId = 'urn:ngsi-ld:AgriCrop:xx';
 
     helper.load(testedNode, entityFlow, function test() {
       const helperNode = helper.getNode('helperNode');
       const testedNode = helper.getNode('testedNode');
 
-      helperNode.on('input', function () {
+      helperNode.on('input', function() {
         done('Something retrieved!!');
       });
 
@@ -94,8 +103,7 @@ describe('NGSI Entity Node', function() {
         done();
       });
 
-      testedNode.receive({payload: entityId});
+      testedNode.receive({ payload: entityId });
     });
   });
-
 });

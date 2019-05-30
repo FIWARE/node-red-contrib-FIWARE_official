@@ -1,6 +1,7 @@
 /* eslint-env node, mocha */
 
-const should = require('should');
+const assert = require('chai').assert;
+
 const http = require('../src/http.js');
 
 const helper = require('node-red-node-test-helper');
@@ -37,7 +38,7 @@ describe('NGSI Updater Node', function() {
 
     helper.load(testedNode, flow, function() {
       const testedNode = helper.getNode('testedNode');
-      testedNode.should.have.property('name', 'tested');
+      assert.propertyVal(testedNode, 'name', 'tested');
       done();
     });
   });
@@ -61,9 +62,13 @@ describe('NGSI Updater Node', function() {
       const testedNode = helper.getNode('testedNode');
 
       helperNode.on('input', function(msg) {
-        const statusCode = msg.payload;
-        should(statusCode).be.exactly(204);
-        done();
+        try {
+          const statusCode = msg.payload;
+          assert.equal(statusCode, 204);
+          done();
+        } catch (e) {
+          done(e);
+        }
       });
 
       testedNode.on('call:error', () => {
@@ -73,5 +78,4 @@ describe('NGSI Updater Node', function() {
       testedNode.receive({ payload: data });
     });
   });
-
 });

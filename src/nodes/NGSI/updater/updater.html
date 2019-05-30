@@ -112,4 +112,23 @@
     <p>
     A simple node that allows to update NGSI(LD,v2) Entity(ies). Entity data shall be provided as part of the msg.payload
     </p>
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload
+            <span class="property-type">JSON Array</span>
+        </dt>
+        <dd>payload containing an Array of NGSI(v2,LD) Entities</dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt>payload
+            <span class="property-type">Number</span>
+        </dt>
+        <dd>Status code returned by the NGSI(v2,LD) API</dd>
+    </dl>
+
+    <h3>Details</h3>
+    <p><code>msg.payload</code> shall contain the NGSI(v2,LD) content.
+    Rest of parameters (endpoint, formats, etc.) shall be defined in the node configuration</p>
 </script>
