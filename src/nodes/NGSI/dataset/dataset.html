@@ -39,8 +39,9 @@
         inputs:  1,
         outputs: 1,
         icon: 'icons/fiware.png',
+        align: 'right',
         label: function() {
-            return this.name || 'NGSI Dataset';
+            return this.name || this.entityType || 'NGSI Dataset';
         }
     });
 

@@ -1,0 +1,127 @@
+<!-- NGSI  Context Broker Config UI -->
+<!-- Copyright (c) 2019 FIWARE Foundation e.V. -->
+<script type="text/javascript">
+
+    const endpointValidator = function(v) {
+        try {
+            const url = new URL(v);
+            if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+                return false;
+            }
+            return true;
+        }
+        catch(e) {
+            return false;
+        }
+    };
+
+    RED.nodes.registerType('Context-Broker',{
+        category: 'config',
+
+        defaults: {
+            name: {
+                value: ''
+            },
+            endpoint: {
+                value: '',
+                required: true,
+                validate: endpointValidator
+            },
+            authendpoint: {
+                value: '',
+                validate: endpointValidator
+            }
+        },
+
+        credentials: {
+            username: { type: 'text' },
+            password: { type: 'password' }
+        },
+
+        label: function() {
+            console.log(this.name);
+            return this.name || 'Context-Broker';
+        },
+
+        oneditprepare: function () {
+            console.log('Edit prepare');
+
+            var tabs = RED.tabs.create({
+                id: "node-config-context-broker-tabs",
+                onchange: function(tab) {
+                    $("#node-config-context-broker-tabs-content").children().hide();
+                    $("#" + tab.id).show();
+                }
+            });
+            tabs.addTab({
+                id: "context-broker-tab-connection",
+                label: "Connection"
+            });
+            tabs.addTab({
+                id: "context-broker-tab-security",
+                label: "Security"
+            });
+
+            setTimeout(function() { tabs.resize(); },0);
+        }
+    });
+
+</script>
+
+<script type="text/x-red" data-template-name="Context-Broker">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+
+    <div class="form-row">
+        <ul style="background: #fff; min-width: 600px; margin-bottom: 20px;" id="node-config-context-broker-tabs"></ul>
+    </div>
+    <div id="node-config-context-broker-tabs-content" style="min-height: 170px;">
+        <div id="context-broker-tab-connection" style="display:none">
+            <div class="form-row">
+                <label for="node-input-endpoint"><i class="icon-tag"></i> Endpoint</label>
+                <input required type="url" id="node-input-endpoint" placeholder="https://orion.lab.fiware.org">
+            </div>
+        </div>
+        <div id="context-broker-tab-security" style="display:none">
+            <div class="form-row">
+                <label for="node-input-authendpoint"><i class="icon-tag"></i> IdM Endpoint</label>
+                <input required type="url" id="node-input-authendpoint" placeholder="https://idm.lab.fiware.org">
+            </div>
+            <div class="form-row">
+                <label for="node-input-username"><i class="icon-tag"></i> Username</label>
+                <input type="text" id="node-input-username">
+            </div>
+            <div class="form-row">
+                <label for="node-input-password"><i class="icon-tag"></i> Password</label>
+                <input type="password" id="node-input-password">
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="Context-Broker">
+    <p>
+    A simple node that allows to configure an NGSI Context Broker.
+    </p>
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload
+            <span class="property-type">string</span>
+        </dt>
+        <dd>Entity Id</dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt>payload
+            <span class="property-type">JSON Object</span>
+        </dt>
+        <dd>Entity encoded as NGSI(v2,LD)</dd>
+    </dl>
+
+    <h3>Details</h3>
+    <p><code>msg.payload</code> shall contain the Entity Id.
+    Rest of parameters (endpoint, formats, etc.) shall be defined in the node configuration</p>
+</script>
