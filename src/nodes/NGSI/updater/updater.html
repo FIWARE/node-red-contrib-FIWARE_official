@@ -22,20 +22,20 @@
         color: '#feb236',
         defaults: {
             name: { value: '' },
+
             endpoint: {
-                value: '',
-                required: true,
-                validate: endpointValidator
+                type: 'Context-Broker',
+                required: true
             },
+
             protocol: {
                 value: 'LD'
             },
-            service: {
-                value: ''
-            },
+
             updateMode: {
               value: 'upsert'
             },
+
             ldContext: { value: defLdContext },
             mimeType: { value: 'application/ld+json' }
         },
@@ -82,10 +82,6 @@
             <option value="LD" selected>NGSI-LD</option>
             <option value="v2">NGSIv2</option>
         </select>
-    </div>
-    <div class="form-row">
-        <label for="node-input-service"><i class="icon-tag"></i> Fiware-Service</label>
-        <input type="text" id="node-input-service">
     </div>
     <div class="form-row">
         <label for="node-input-updateMode"><i class="icon-tag"></i> Update Mode</label>

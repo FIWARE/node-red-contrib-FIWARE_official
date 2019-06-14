@@ -4,19 +4,6 @@
     const defLdContext =
         'https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/defaultContext/defaultContext.jsonld';
 
-    const endpointValidator = function(v) {
-        try {
-            const url = new URL(v);
-            if (url.protocol !== 'http:' && url.protocol !== 'https:') {
-                return false;
-            }
-            return true;
-        }
-        catch(e) {
-            return false;
-        }
-    };
-
     RED.nodes.registerType('NGSI-Entity',{
         category: 'NGSI',
         color: '#a6bbcf',
@@ -28,9 +15,6 @@
             },
             protocol: {
                 'value': 'LD'
-            },
-            service: {
-                'value': ''
             },
             ldContext: { value: defLdContext },
             mode: { value: 'normalized' },
@@ -81,10 +65,6 @@
             <option value="LD" selected>NGSI-LD</option>
             <option value="v2">NGSIv2</option>
         </select>
-    </div>
-    <div class="form-row">
-        <label for="node-input-service"><i class="icon-tag"></i> Fiware-Service</label>
-        <input type="text" id="node-input-service">
     </div>
     <div class="form-row" id="ldContext">
         <label for="node-input-ldContext"><i class="icon-tag"></i> JSON-LD @context</label>

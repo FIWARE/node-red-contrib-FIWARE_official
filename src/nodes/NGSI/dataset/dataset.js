@@ -53,6 +53,9 @@ module.exports = function(RED) {
     RED.nodes.createNode(this, config);
     const node = this;
 
+    const endpointConfig = RED.nodes.getNode(config.endpoint);
+    const endpoint = endpointConfig.endpoint;
+
     node.on('input', async function(msg) {
       if (!validate(config, msg.payload)) {
         msg.payload = null;
@@ -60,12 +63,11 @@ module.exports = function(RED) {
         return;
       }
 
-      const endpoint = config.endpoint;
       const parameters = buildParameters(config, msg.payload);
 
       const response = await http.get(
         `${endpoint}/${common.apiPrefix(config)}/entities/?${parameters}`,
-        common.buildHeaders(config)
+        common.buildHeaders(endpointConfig)
       );
 
       const statusCode = response.response.statusCode;

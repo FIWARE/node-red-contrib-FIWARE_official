@@ -2,9 +2,13 @@
 <!-- Copyright (c) 2019 FIWARE Foundation e.V. -->
 <script type="text/javascript">
 
-    const endpointValidator = function(v) {
+    const endpointValidator = function(required, v) {
+        if (!required && v.trim.length() == 0) {
+            return true;
+        }
+
         try {
-            const url = new URL(v);
+            const url = new URL(v.trim());
             if (url.protocol !== 'http:' && url.protocol !== 'https:') {
                 return false;
             }
@@ -25,11 +29,16 @@
             endpoint: {
                 value: '',
                 required: true,
-                validate: endpointValidator
+                validate: endpointValidator.bind(null, true)
             },
-            authendpoint: {
+
+            service: {
+                value: ''
+            },
+
+            idmEndpoint: {
                 value: '',
-                validate: endpointValidator
+                validate: endpointValidator.bind(null, false)
             }
         },
 
@@ -39,13 +48,10 @@
         },
 
         label: function() {
-            console.log(this.name);
             return this.name || 'Context-Broker';
         },
 
         oneditprepare: function () {
-            console.log('Edit prepare');
-
             var tabs = RED.tabs.create({
                 id: "node-config-context-broker-tabs",
                 onchange: function(tab) {
@@ -70,8 +76,8 @@
 
 <script type="text/x-red" data-template-name="Context-Broker">
     <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
+        <label for="node-config-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-config-input-name" placeholder="Name">
     </div>
 
     <div class="form-row">
@@ -80,25 +86,30 @@
     <div id="node-config-context-broker-tabs-content" style="min-height: 170px;">
         <div id="context-broker-tab-connection" style="display:none">
             <div class="form-row">
-                <label for="node-input-endpoint"><i class="icon-tag"></i> Endpoint</label>
-                <input required type="url" id="node-input-endpoint" placeholder="https://orion.lab.fiware.org">
+                <label for="node-config-input-endpoint"><i class="icon-tag"></i> Endpoint</label>
+                <input required type="url" id="node-config-input-endpoint" placeholder="https://orion.lab.fiware.org">
+            </div>
+             <div class="form-row">
+                <label for="node-config-input-service"><i class="icon-tag"></i> Fiware-Service</label>
+                <input type="text" id="node-config-input-service">
             </div>
         </div>
+
         <div id="context-broker-tab-security" style="display:none">
             <div class="form-row">
-                <label for="node-input-authendpoint"><i class="icon-tag"></i> IdM Endpoint</label>
-                <input required type="url" id="node-input-authendpoint" placeholder="https://idm.lab.fiware.org">
+                <label for="node-config-input-idmEndpoint"><i class="icon-tag"></i> IdM Endpoint</label>
+                <input required type="url" id="node-config-input-idmEndpoint" placeholder="https://idm.lab.fiware.org">
             </div>
             <div class="form-row">
-                <label for="node-input-username"><i class="icon-tag"></i> Username</label>
-                <input type="text" id="node-input-username">
+                <label for="node-config-input-username"><i class="icon-tag"></i> Username</label>
+                <input type="text" id="node-config-input-username">
             </div>
             <div class="form-row">
-                <label for="node-input-password"><i class="icon-tag"></i> Password</label>
-                <input type="password" id="node-input-password">
+                <label for="node-config-input-password"><i class="icon-tag"></i> Password</label>
+                <input type="password" id="node-config-input-password">
             </div>
+
         </div>
-    </div>
 </script>
 
 <script type="text/x-red" data-help-name="Context-Broker">

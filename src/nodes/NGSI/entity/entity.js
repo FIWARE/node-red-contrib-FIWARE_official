@@ -68,6 +68,9 @@ module.exports = function(RED) {
     RED.nodes.createNode(this, config);
     const node = this;
 
+    const endpointConfig = RED.nodes.getNode(config.endpoint);
+    const endpoint = endpointConfig.endpoint;
+
     node.on('input', async function(msg) {
       if (!validate(config, msg)) {
         msg.payload = 'Bad Configuration';
@@ -79,7 +82,6 @@ module.exports = function(RED) {
       }
 
       const entityId = msg.payload;
-      const endpoint = config.endpoint;
 
       let resource = `${endpoint}/${common.apiPrefix(
         config
@@ -93,7 +95,10 @@ module.exports = function(RED) {
 
       let response = null;
       try {
-        response = await http.get(resource, common.buildHeaders(config));
+        response = await http.get(
+          resource,
+          common.buildHeaders(endpointConfig)
+        );
       } catch (e) {
         msg.payload = { e };
         node.error(`Exception while retrieving entity: ${entityId}: ` + e, msg);

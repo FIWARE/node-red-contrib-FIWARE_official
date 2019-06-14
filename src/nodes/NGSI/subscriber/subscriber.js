@@ -80,8 +80,6 @@ module.exports = function(RED) {
           node.error(`Query returned HTTP status code in error: ${statusCode}`);
       }
     });
-
-    console.log('Here I can do whatever I want');
   }
 
   RED.nodes.registerType('NGSI-Subscriber', NgsiSubscriberNode);
