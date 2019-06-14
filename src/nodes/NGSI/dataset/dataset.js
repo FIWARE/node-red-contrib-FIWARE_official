@@ -65,10 +65,18 @@ module.exports = function(RED) {
 
       const parameters = buildParameters(config, msg.payload);
 
-      const response = await http.get(
-        `${endpoint}/${common.apiPrefix(config)}/entities/?${parameters}`,
-        common.buildHeaders(endpointConfig)
-      );
+      let response = null;
+      try {
+          response = await http.get(
+              `${endpoint}/${common.apiPrefix(config)}/entities/?${parameters}`,
+              common.buildHeaders(endpointConfig)
+          );
+      }
+      catch (e) {
+        msg.payload = { e };
+        node.error(`Exception while retrieving dataset: ${config.name} ` + e, msg);
+        return;
+      }
 
       const statusCode = response.response.statusCode;
 
