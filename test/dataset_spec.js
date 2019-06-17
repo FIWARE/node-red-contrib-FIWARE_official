@@ -6,6 +6,7 @@ const http = require('../src/http.js');
 
 const helper = require('node-red-node-test-helper');
 const testedNode = require('../src/nodes/NGSI/dataset/dataset.js');
+const brokerNode = require('../src/nodes/NGSI/contextbroker/contextbroker.js');
 
 const data = require('./test_data.json');
 
@@ -27,6 +28,7 @@ describe('NGSI Dataset Node', function() {
   };
 
   const retrievalFlow = [
+    configNode,
     {
       id: 'testedNode',
       type: 'NGSI-Dataset',
@@ -66,7 +68,7 @@ describe('NGSI Dataset Node', function() {
       }
     ];
 
-    helper.load(testedNode, flow, function() {
+    helper.load([testedNode, brokerNode], flow, function() {
       try {
         const testedNode = helper.getNode('testedNode');
         assert.propertyVal(testedNode, 'name', 'tested');
@@ -77,12 +79,12 @@ describe('NGSI Dataset Node', function() {
     });
   });
 
-  it.skip('should retrieve Data', function(done) {
+  it('should retrieve Data', function(done) {
     const entityType = data.type;
     const q = 'name==Wheat';
     const attrs = 'name';
 
-    helper.load(testedNode, retrievalFlow, function test() {
+    helper.load([testedNode, brokerNode], retrievalFlow, function test() {
       const helperNode = helper.getNode('helperNode');
       const testedNode = helper.getNode('testedNode');
 
@@ -115,7 +117,7 @@ describe('NGSI Dataset Node', function() {
     const entityType = data.type;
     const q = 'name==xx';
 
-    helper.load(testedNode, retrievalFlow, function test() {
+    helper.load([testedNode, brokerNode], retrievalFlow, function test() {
       const helperNode = helper.getNode('helperNode');
       const testedNode = helper.getNode('testedNode');
 

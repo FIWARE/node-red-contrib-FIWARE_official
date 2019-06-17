@@ -6,6 +6,7 @@ const http = require('../src/http.js');
 
 const helper = require('node-red-node-test-helper');
 const testedNode = require('../src/nodes/NGSI/entity/entity.js');
+const brokerNode = require('../src/nodes/NGSI/contextbroker/contextbroker.js');
 
 const data = require('./test_data.json');
 
@@ -67,10 +68,9 @@ describe('NGSI Entity Node', function() {
       }
     ];
 
-    helper.load(testedNode, flow, function() {
+    helper.load([testedNode, brokerNode], flow, function() {
       try {
         const testedNode = helper.getNode('testedNode');
-        console.log(testedNode);
         assert.propertyVal(testedNode, 'name', 'tested');
         done();
       } catch (e) {
@@ -83,7 +83,7 @@ describe('NGSI Entity Node', function() {
     const entityId =
       'urn:ngsi-ld:AgriCrop:df72dc57-1eb9-42a3-88a9-8647ecc954b4';
 
-    helper.load(testedNode, entityFlow, function test() {
+    helper.load([testedNode, brokerNode], entityFlow, function test() {
       const helperNode = helper.getNode('helperNode');
       const testedNode = helper.getNode('testedNode');
 
@@ -108,7 +108,7 @@ describe('NGSI Entity Node', function() {
   it('should retrieve nothing', function(done) {
     const entityId = 'urn:ngsi-ld:AgriCrop:xx';
 
-    helper.load(testedNode, entityFlow, function test() {
+    helper.load([testedNode, brokerNode], entityFlow, function test() {
       const helperNode = helper.getNode('helperNode');
       const testedNode = helper.getNode('testedNode');
 
