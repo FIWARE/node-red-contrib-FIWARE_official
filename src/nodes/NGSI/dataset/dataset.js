@@ -67,14 +67,16 @@ module.exports = function(RED) {
 
       let response = null;
       try {
-          response = await http.get(
-              `${endpoint}/${common.apiPrefix(config)}/entities/?${parameters}`,
-              common.buildHeaders(endpointConfig)
-          );
-      }
-      catch (e) {
+        response = await http.get(
+          `${endpoint}/${common.apiPrefix(config)}/entities/?${parameters}`,
+          common.buildHeaders(endpointConfig)
+        );
+      } catch (e) {
         msg.payload = { e };
-        node.error(`Exception while retrieving dataset: ${config.name} ` + e, msg);
+        node.error(
+          `Exception while retrieving dataset: ${config.name} ` + e,
+          msg
+        );
         return;
       }
 

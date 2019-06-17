@@ -18,14 +18,22 @@ describe('NGSI Entity Node', function() {
     'Fiware-Service': TENANT
   };
 
+  const configNode = {
+    id: 'testBroker',
+    name: 'broker',
+    type: 'Context-Broker',
+    endpoint: ENDPOINT,
+    service: TENANT
+  };
+
   const entityFlow = [
+    configNode,
     {
       id: 'testedNode',
       type: 'NGSI-Entity',
       name: 'tested',
       wires: [['helperNode']],
-      endpoint: ENDPOINT,
-      service: TENANT,
+      endpoint: configNode.id,
       protocol: 'V2' // V2 for the time being. LD also supported
     },
     { id: 'helperNode', type: 'helper' }
@@ -49,11 +57,20 @@ describe('NGSI Entity Node', function() {
   });
 
   it('should be loaded', function(done) {
-    const flow = [{ id: 'testedNode', type: 'NGSI-Entity', name: 'tested' }];
+    const flow = [
+      configNode,
+      {
+        id: 'testedNode',
+        type: 'NGSI-Entity',
+        name: 'tested',
+        endpoint: configNode.id
+      }
+    ];
 
     helper.load(testedNode, flow, function() {
       try {
         const testedNode = helper.getNode('testedNode');
+        console.log(testedNode);
         assert.propertyVal(testedNode, 'name', 'tested');
         done();
       } catch (e) {
