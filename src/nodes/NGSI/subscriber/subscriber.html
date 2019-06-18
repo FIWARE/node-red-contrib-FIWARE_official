@@ -1,3 +1,5 @@
+<!-- NGSI Subscriber Config UI -->
+<!-- Copyright (c) 2019 FIWARE Foundation e.V. -->
 <script type="text/javascript">
 
     const defLdContext =
@@ -16,32 +18,42 @@
         }
     };
 
+    const nodeValidator = function() {
+        if (this.entityId.trim().length == 0
+            && this.entityType.trim().length == 0) {
+            return false;
+        }
+    };
+
     RED.nodes.registerType('NGSI-Subscriber',{
         category: 'NGSI',
         color: '#d8bfd8',
         defaults: {
             name: { value: '' },
+
             endpoint: {
-                value: '',
-                required: true,
-                validate: endpointValidator
+                type: 'Context-Broker',
+                required: true
             },
             protocol: {
               'value': 'LD'
             },
-            service: { value: '' },
+
             ldContext: { value: defLdContext },
-            entityId: { value: '' },
+            entityId: {
+                value: ''
+            },
             entityType: { value: '' },
             watchedAttributes: { value: '' },
             q: { value: '' },
-            mode: { value: 'normalized' },
+
+            notificationMode: { value: 'normalized' },
             notificationEndpoint: {
-                value: 'http://localhost:9999',
+                value: '',
                 required: true,
                 validate: endpointValidator
             },
-            notifiedAttributes: { value: '' }
+            notificationAttributes: { value: '' }
         },
         inputs:  1,
         outputs: 1,
@@ -49,6 +61,25 @@
         align: 'right',
         label: function() {
             return this.name || this.entityType || 'NGSI Subscriber';
+        },
+        oneditprepare: function () {
+            var tabs = RED.tabs.create({
+                id: "node-ngsi-subscriber-tabs",
+                onchange: function(tab) {
+                    $("#node-ngsi-subscriber-tabs-content").children().hide();
+                    $("#" + tab.id).show();
+                }
+            });
+            tabs.addTab({
+                id: "ngsi-subscriber-tab-subscription",
+                label: "Subscription"
+            });
+            tabs.addTab({
+                id: "ngsi-subscriber-tab-notification",
+                label: "Notification"
+            });
+
+            setTimeout(function() { tabs.resize(); },0);
         }
     });
 
@@ -78,10 +109,6 @@
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
     <div class="form-row">
-        <label for="node-input-endpoint"><i class="icon-tag"></i> Endpoint</label>
-        <input type="text" id="node-input-endpoint" placeholder="https://orion.lab.fiware.org">
-    </div>
-    <div class="form-row">
         <label for="node-input-protocol"><i class="icon-tag"></i> Protocol</label>
         <select id="node-input-protocol" onchange="protocolChanged(event)">
             <option value="LD" selected>NGSI-LD</option>
@@ -89,38 +116,67 @@
         </select>
     </div>
     <div class="form-row">
-        <label for="node-input-service"><i class="icon-tag"></i> Fiware-Service</label>
-        <input type="text" id="node-input-service">
+        <ul style="background: #fff; min-width: 600px; margin-bottom: 20px;" id="node-ngsi-subscriber-tabs"></ul>
     </div>
-    <div class="form-row" id="ldContext">
-        <label for="node-input-ldContext"><i class="icon-tag"></i> JSON-LD @context</label>
-        <input required type="url" id="node-input-ldContext" placeholder="NGSI-LD @context">
-    </div>
-    <div class="form-row">
-        <label for="node-input-entityType"><i class="icon-tag"></i> Entity Type(s)</label>
-        <input type="text" id="node-input-entityType">
-    </div>
-    <div class="form-row">
-        <label for="node-input-attrs"><i class="icon-tag"></i> Attribute(s)</label>
-        <input type="text" id="node-input-attrs">
-    </div>
-    <div class="form-row">
-        <label for="node-input-q"><i class="icon-tag"></i> Filter</label>
-        <input type="text" id="node-input-q">
-    </div>
-    <div class="form-row" id="mimeType">
-        <label for="node-input-mimeType"><i class="icon-tag"></i> MIME Type</label>
-        <select id="node-input-mimeType">
-            <option value="application/json">JSON</option>
-            <option value="application/ld+json" selected>JSON-LD</option>
-        </select>
-    </div>
-    <div class="form-row">
-        <label for="node-input-mode"><i class="icon-tag"></i> Representation</label>
-        <select id="node-input-mode">
-            <option value="normalized">normalized</option>
-            <option value="keyValues">keyValues</option>
-        </select>
+
+    <div id="node-ngsi-subscriber-tabs-content" style="min-height: 170px;">
+        <div id="ngsi-subscriber-tab-subscription" style="display:none">
+            <div class="form-row">
+                <label for="node-input-endpoint"><i class="icon-tag"></i> Endpoint</label>
+                <input type="text" id="node-input-endpoint" placeholder="https://orion.lab.fiware.org">
+            </div>
+
+            <div class="form-row" id="ldContext">
+                <label for="node-input-ldContext"><i class="icon-tag"></i> JSON-LD @context</label>
+                <input required type="url" id="node-input-ldContext" placeholder="NGSI-LD @context">
+            </div>
+
+            <div class="form-row">
+                <label for="node-input-entityId"><i class="icon-tag"></i> Entity Id(s)</label>
+                <input type="text" id="node-input-entityId">
+            </div>
+
+            <div class="form-row">
+                <label for="node-input-entityType"><i class="icon-tag"></i> Entity Type(s)</label>
+                <input type="text" id="node-input-entityType">
+            </div>
+
+            <div class="form-row">
+                <label for="node-input-watchedAttrs"><i class="icon-tag"></i> Watched Attribute(s)</label>
+                <input type="text" id="node-input-attrs">
+            </div>
+
+            <div class="form-row">
+                <label for="node-input-q"><i class="icon-tag"></i> Filter</label>
+                <input type="text" id="node-input-q">
+            </div>
+        </div>
+
+        <div id="ngsi-subscriber-tab-notification" style="display:none">
+            <div class="form-row">
+                <label for="node-input-notificationEndpoint"><i class="icon-tag"></i> Notification Endpoint</label>
+                <input type="text" id="node-input-notificationEndpoint" placeholder="http://localhost:1880">
+            </div>
+            <div class="form-row">
+                <label for="node-input-notificationAttributes"><i class="icon-tag"></i> Attributes</label>
+                <input type="text" id="node-input-notificationAttributes">
+            </div>
+            <div class="form-row" id="mimeType">
+                <label for="node-input-mimeType"><i class="icon-tag"></i> MIME Type</label>
+                <select id="node-input-mimeType">
+                    <option value="application/json">JSON</option>
+                    <option value="application/ld+json" selected>JSON-LD</option>
+                </select>
+            </div>
+            <div class="form-row">
+                <label for="node-input-notificationMode"><i class="icon-tag"></i> Representation</label>
+                <select id="node-input-notificationMode">
+                    <option value="normalized">normalized</option>
+                    <option value="keyValues">keyValues</option>
+                </select>
+            </div>
+        </div>
+
     </div>
 </script>
 
@@ -128,10 +184,6 @@
     <p>A simple node that allows to subscribe to an NGSI(v2, LD) Dataset</p>
     <h3>Outputs</h3>
     <dl class="message-properties">
-        <dt>payload
-            <span class="property-type">JSON Array</span>
-        </dt>
-        <dd>List of Entities, encoded as NGSI(v2,LD), that compose the subscribed Dataset</dd>
     </dl>
 
     <h3>Details</h3>

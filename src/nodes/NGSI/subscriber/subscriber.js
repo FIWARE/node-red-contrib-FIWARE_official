@@ -2,7 +2,7 @@
  *
  *   NGSI Subscriber node
  *
- *   Given an Entity type, attributes and a filter subscribes to the changes
+ *   Given an Entity type / id, attributes and a filter subscribes to the changes
  *
  *   Copyright (c) 2019 FIWARE Foundation e.V.
  *
@@ -53,6 +53,9 @@ module.exports = function(RED) {
     RED.nodes.createNode(this, config);
     const node = this;
 
+    const endpointConfig = RED.nodes.getNode(config.endpoint);
+    const endpoint = endpointConfig.endpoint;
+
     node.on('input', async function(msg) {
       if (!validate(config, msg.payload)) {
         msg.payload = null;
@@ -60,7 +63,6 @@ module.exports = function(RED) {
         return;
       }
 
-      const endpoint = config.endpoint;
       const parameters = buildSubscription(config, msg.payload);
 
       const response = await http.get(

@@ -116,23 +116,7 @@
     <p>
     A simple node that allows to configure an NGSI Context Broker.
     </p>
-    <h3>Inputs</h3>
-    <dl class="message-properties">
-        <dt>payload
-            <span class="property-type">string</span>
-        </dt>
-        <dd>Entity Id</dd>
-    </dl>
-
-    <h3>Outputs</h3>
-    <dl class="message-properties">
-        <dt>payload
-            <span class="property-type">JSON Object</span>
-        </dt>
-        <dd>Entity encoded as NGSI(v2,LD)</dd>
-    </dl>
 
     <h3>Details</h3>
-    <p><code>msg.payload</code> shall contain the Entity Id.
-    Rest of parameters (endpoint, formats, etc.) shall be defined in the node configuration</p>
+    <p>The only mandatory field is Endpoint.</p>
 </script>
