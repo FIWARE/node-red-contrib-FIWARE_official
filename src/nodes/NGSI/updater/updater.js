@@ -87,14 +87,15 @@ module.exports = function(RED) {
     RED.nodes.createNode(this, config);
     const node = this;
 
+    const endpointConfig = RED.nodes.getNode(config.endpoint);
+    const endpoint = endpointConfig.endpoint;
+
     node.on('input', async function(msg) {
       if (!validate(config, msg)) {
         msg.payload = null;
         node.error('Node is not properly configured, Entity data not provided');
         return;
       }
-
-      const endpoint = config.endpoint;
 
       const resource = `${endpoint}/${common.apiPrefix(config)}/op/update`;
 
@@ -105,7 +106,7 @@ module.exports = function(RED) {
         response = await http.post(
           resource,
           payload,
-          common.buildHeaders(config)
+          common.buildHeaders(endpointConfig)
         );
       } catch (e) {
         msg.payload = null;

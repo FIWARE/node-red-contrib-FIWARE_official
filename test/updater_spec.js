@@ -6,6 +6,7 @@ const http = require('../src/http.js');
 
 const helper = require('node-red-node-test-helper');
 const testedNode = require('../src/nodes/NGSI/updater/updater.js');
+const brokerNode = require('../src/nodes/NGSI/contextbroker/contextbroker.js');
 
 const data = require('./test_data.json');
 
@@ -16,6 +17,14 @@ describe('NGSI Updater Node', function() {
   const TENANT = 'test';
   const HEADERS = {
     'Fiware-Service': TENANT
+  };
+
+  const configNode = {
+    id: 'testBroker',
+    name: 'broker',
+    type: 'Context-Broker',
+    endpoint: ENDPOINT,
+    service: TENANT
   };
 
   before(done => {
@@ -34,9 +43,17 @@ describe('NGSI Updater Node', function() {
   });
 
   it('should be loaded', function(done) {
-    const flow = [{ id: 'testedNode', type: 'NGSI-Updater', name: 'tested' }];
+    const flow = [
+      configNode,
+      {
+        id: 'testedNode',
+        type: 'NGSI-Updater',
+        name: 'tested',
+        endpoint: configNode.id
+      }
+    ];
 
-    helper.load(testedNode, flow, function() {
+    helper.load([testedNode, brokerNode], flow, function() {
       const testedNode = helper.getNode('testedNode');
       assert.propertyVal(testedNode, 'name', 'tested');
       done();
@@ -45,19 +62,19 @@ describe('NGSI Updater Node', function() {
 
   it('should update Entity', function(done) {
     const flow = [
+      configNode,
       {
         id: 'testedNode',
         type: 'NGSI-Updater',
         name: 'tested',
         wires: [['helperNode']],
-        endpoint: ENDPOINT,
-        service: TENANT,
+        endpoint: configNode.id,
         protocol: 'V2' // V2 for the time being. LD also supported
       },
       { id: 'helperNode', type: 'helper' }
     ];
 
-    helper.load(testedNode, flow, function test() {
+    helper.load([testedNode, brokerNode], flow, function test() {
       const helperNode = helper.getNode('helperNode');
       const testedNode = helper.getNode('testedNode');
 
