@@ -2,7 +2,7 @@
  *
  *   NGSI Subscriber node
  *
- *   Given an Entity type / id, attributes and a filter subscribes to the changes
+ *   Given an Entity type, attributes and a filter subscribes to the changes
  *
  *   Copyright (c) 2019 FIWARE Foundation e.V.
  *
@@ -23,29 +23,94 @@ function validate(config, payload) {
     out = false;
   }
 
+  if (!common.getParam('notificationEndpoint', config)) {
+    out = false;
+  }
+
+  return out;
+}
+
+function buildSubject(config, payload) {
+  const out = Object.create(null);
+
+  const entityTypes = common.getParam('entityType', config, payload);
+
+  if (entityTypes) {
+    out.entities = [];
+
+    const entityTypeList = entityTypes.split(',');
+    entityTypeList.forEach(eType => {
+      out.entities.push({
+        type: eType,
+        idPattern: '.*'
+      });
+    });
+  }
+
+  const watchedAttributes = common.getParam(
+    'watchedAttributes',
+    config,
+    payload
+  );
+
+  let condition = null;
+
+  if (watchedAttributes) {
+    condition = Object.create(null);
+    out.condition = condition;
+
+    condition.attributes = [];
+
+    const attributeList = watchedAttributes.split(',');
+    attributeList.forEach(attr => {
+      condition.attributes.push(attr);
+    });
+  }
+
+  const q = common.getParam('q', config, payload);
+
+  if (q) {
+    if (!condition) {
+      condition = Object.create(null);
+      out.condition = condition;
+    }
+    condition.expression = q;
+  }
+
+  return out;
+}
+
+function buildNotification(config) {
+  const out = Object.create(null);
+
+  out.http = {
+    url: common.getParam('notificationEndpoint', config)
+  };
+
+  const attrs = common.getParam('notificationAttributes', config);
+
+  if (attrs) {
+    out.attributes = [];
+
+    attrs.forEach(attr => {
+      out.attributes.push(attr);
+    });
+  }
+
+  const mode = common.getParam('notificationMode', config);
+
+  out.attrsFormat = mode;
+
   return out;
 }
 
 function buildSubscription(config, payload) {
-  const out = [];
+  const out = Object.create(null);
 
-  out.push(`type=${common.getParam('entityType', config, payload)}`);
+  out.subject = buildSubject(config, payload);
+  out.notification = buildNotification(config);
 
-  if (config.mode && config.mode === 'keyValues') {
-    out.push(`options=${config.mode}`);
-  }
-
-  const attrs = common.getParam('attrs', config, payload);
-  if (attrs) {
-    out.push(`attrs=${attrs}`);
-  }
-
-  const q = common.getParam('q', config, payload);
-  if (q) {
-    out.push(`q=${q}`);
-  }
-
-  return out.join('&');
+  return out;
 }
 
 module.exports = function(RED) {
@@ -63,23 +128,34 @@ module.exports = function(RED) {
         return;
       }
 
-      const parameters = buildSubscription(config, msg.payload);
+      const subscription = buildSubscription(config, msg.payload);
 
-      const response = await http.get(
-        `${endpoint}/${common.apiPrefix(config)}/entities/?${parameters}`,
-        common.buildHeaders(config)
-      );
+      let response = null;
+      try {
+        response = await http.post(
+          `${endpoint}/${common.apiPrefix(config)}/subscriptions/`,
+          subscription
+        );
+      } catch (e) {
+        msg.payload = { e };
+        node.error(`Exception while creating subscription: ` + e, msg);
+        return;
+      }
 
       const statusCode = response.response.statusCode;
 
       switch (statusCode) {
-        case 200:
-          msg.payload = response.body;
+        case 201:
+          msg.payload = statusCode;
           node.send(msg);
           break;
         default:
           msg.payload = null;
-          node.error(`Query returned HTTP status code in error: ${statusCode}`);
+          node.error(
+            `Query returned HTTP status code in error: ${statusCode}. Payload: ${JSON.stringify(
+              response.body
+            )}`
+          );
       }
     });
   }
