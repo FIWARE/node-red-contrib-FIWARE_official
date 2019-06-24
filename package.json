@@ -11,8 +11,9 @@
     "nodes": {
       "Entity": "src/nodes/NGSI/entity/entity.js",
       "Dataset": "src/nodes/NGSI/dataset/dataset.js",
-      "Update":  "src/nodes/NGSI/update/update.js",
-      "Subscription": "src/nodes/NGSI/subscription/subscription.js",
+      "Updater": "src/nodes/NGSI/updater/updater.js",
+      "Subscriber": "src/nodes/NGSI/subscriber/subscriber.js",
+      "Transformer": "src/nodes/NGSI/transformer/transformer.js",
       "Context-Broker": "src/nodes/NGSI/contextbroker/contextbroker.js"
     }
   },
@@ -21,7 +22,8 @@
     "url": "git+https://github.com/FIWARE/node-red-contrib-FIWARE_official.git"
   },
   "dependencies": {
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "uri-js": "^4.2.2"
   },
   "devDependencies": {
     "chai": "^4.2.0",
@@ -53,4 +55,3 @@
   },
   "homepage": "https://github.com/FIWARE/node-red-contrib-FIWARE_official#readme"
 }
-
