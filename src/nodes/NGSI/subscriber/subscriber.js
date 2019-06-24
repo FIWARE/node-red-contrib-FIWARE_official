@@ -59,11 +59,12 @@ function buildSubject(config, payload) {
     condition = Object.create(null);
     out.condition = condition;
 
-    condition.attributes = [];
+    condition.attrs = [];
 
     const attributeList = watchedAttributes.split(',');
+
     attributeList.forEach(attr => {
-      condition.attributes.push(attr);
+      condition.attrs.push(attr);
     });
   }
 
@@ -87,13 +88,15 @@ function buildNotification(config) {
     url: common.getParam('notificationEndpoint', config)
   };
 
-  const attrs = common.getParam('notificationAttributes', config);
+  const notifAttrs = common.getParam('notificationAttributes', config);
 
-  if (attrs) {
-    out.attributes = [];
+  if (notifAttrs) {
+    out.attrs = [];
+
+    const attrs = notifAttrs.split(',');
 
     attrs.forEach(attr => {
-      out.attributes.push(attr);
+      out.attrs.push(attr);
     });
   }
 
