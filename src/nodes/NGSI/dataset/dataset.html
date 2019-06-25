@@ -115,7 +115,11 @@
 </script>
 
 <script type="text/x-red" data-help-name="NGSI-Dataset">
-    <p>A simple node that allows to obtain an NGSI(v2, LD) Dataset</p>
+    <p>A simple node that allows to obtain an NGSI(v2, LD) Dataset.
+    See the <a href="https://fiware.github.io/specifications/ngsiv2/stable/">NGSIv2</a>
+    or the <a href="https://www.etsi.org/deliver/etsi_gs/CIM/001_099/009/01.01.01_60/gs_CIM009v010101p.pdf">NGSI-LD</a>
+    specifications
+    </p>
     <h3>Inputs</h3>
     <dl class="message-properties">
         <dt>payload
@@ -144,10 +148,11 @@
         <dt>payload
             <span class="property-type">JSON Array</span>
         </dt>
-        <dd>List of Entities, encoded as NGSI(v2,LD), that compose the Dataset</dd>
+        <dd>List of Entities, encoded as NGSI(v2,LD), that compose the Dataset.
+        </dd>
     </dl>
 
     <h3>Details</h3>
-    <p><code>msg.payload</code> shall contain the parameters of the dataset.
+    <p><code>msg.payload</code> could contain some of the parameters of the Dataset (see above).
     Rest of parameters (endpoint, formats, etc.) shall be defined in the node configuration</p>
 </script>

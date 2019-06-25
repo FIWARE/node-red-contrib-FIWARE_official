@@ -177,11 +177,44 @@
 </script>
 
 <script type="text/x-red" data-help-name="NGSI-Subscriber">
-    <p>A simple node that allows to subscribe to an NGSI(v2, LD) Dataset</p>
+    <p>A simple node that allows to create an NGSI(v2, LD) Subscription.
+    See the <a href="https://fiware.github.io/specifications/ngsiv2/stable/">NGSIv2</a>
+    or the <a href="https://www.etsi.org/deliver/etsi_gs/CIM/001_099/009/01.01.01_60/gs_CIM009v010101p.pdf">NGSI-LD</a>
+    specifications
+    </p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload
+            <span class="property-type">JSON Object</span>
+        </dt>
+        <dd>(optional) payload containing the following fields:
+            <dl class="message-properties">
+                <dt>entityType
+                    <span class="property-type">string</span>
+                </dt>
+                <dd>Comma-separated list of Entity Types</dd>
+                <dt>q
+                    <span class="property-type">string</span>
+                </dt>
+                <dd>NGSI(v2,LD) Query</dd>
+                <dt>watchedAttributes
+                    <span class="property-type">string</span>
+                </dt>
+                <dd>Comma-separated list of watched Attributes</dd>
+            </dl>
+        </dd>
+    </dl>
+
     <h3>Outputs</h3>
     <dl class="message-properties">
+        <dt>payload
+            <span class="property-type">Number</span>
+        </dt>
+        <dd>Status code returned by the NGSI(v2,LD) API</dd>
     </dl>
 
     <h3>Details</h3>
-    Parameters (endpoint, formats, etc.) shall be defined in the node configuration</p>
+    <p><code>msg.payload</code> could contain some of the parameters of the Subscription (see above).
+    Rest of parameters (endpoint, formats, notification details, etc.) shall be defined in the node configuration</p>
 </script>
