@@ -137,7 +137,8 @@ module.exports = function(RED) {
       try {
         response = await http.post(
           `${endpoint}/${common.apiPrefix(config)}/subscriptions/`,
-          subscription
+          subscription,
+          common.buildHeaders(endpointConfig)
         );
       } catch (e) {
         msg.payload = { e };
@@ -146,10 +147,20 @@ module.exports = function(RED) {
       }
 
       const statusCode = response.response.statusCode;
+      const locationHeader = response.response.headers.location;
+      let subscriptionId = null;
 
       switch (statusCode) {
         case 201:
-          msg.payload = statusCode;
+          if (locationHeader) {
+            const elements = locationHeader.split('/');
+            subscriptionId = elements[elements.length - 1];
+          }
+
+          msg.payload = {
+            statusCode,
+            subscriptionId
+          };
           node.send(msg);
           break;
         default:

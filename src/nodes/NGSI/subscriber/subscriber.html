@@ -210,9 +210,22 @@
     <h3>Outputs</h3>
     <dl class="message-properties">
         <dt>payload
-            <span class="property-type">Number</span>
+            <span class="property-type">JSON Object</span>
         </dt>
-        <dd>Status code returned by the NGSI(v2,LD) API</dd>
+        <dd>payload containing the following fields:
+            <dl class="message-properties">
+                <dt>statusCode
+                    <span class="property-type">number</span>
+                </dt>
+                <dd>Status code returned by the NGSI(v2,LD) API</dd>
+            </dl>
+            <dl class="message-properties">
+                <dt>subscriptionId
+                    <span class="property-type">string</span>
+                </dt>
+                <dd>Id of the Subscription created</dd>
+            </dl>
+        </dd>
     </dl>
 
     <h3>Details</h3>
