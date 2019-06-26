@@ -75,13 +75,15 @@ describe('NGSI Subscription Node', function() {
         wires: [['helperNode']],
         endpoint: configNode.id,
         protocol: 'V2', // V2 for the time being. LD will also be supported,
-        notificationEndpoint: 'http://localhost:6000'
+        notificationEndpoint: 'http://localhost:6000',
+        q: 'status==free'
       },
       { id: 'helperNode', type: 'helper' }
     ];
 
     const subscriptionData = {
-      entityType: 'ParkingSpot'
+      entityType: 'ParkingSpot',
+      watchedAttributes: 'status'
     };
 
     helper.load([testedNode, brokerNode], flow, function test() {

@@ -12,6 +12,7 @@
 
 const http = require('../../../http.js');
 const common = require('../../../common.js');
+const ngsi = require('../../../ngsi_utils');
 
 function validate(config, payload) {
   let out = true;
@@ -75,7 +76,9 @@ function buildSubject(config, payload) {
       condition = Object.create(null);
       out.condition = condition;
     }
-    condition.expression = q;
+    condition.expression = {
+      q
+    };
   }
 
   return out;
@@ -108,12 +111,38 @@ function buildNotification(config) {
 }
 
 function buildSubscription(config, payload) {
+  const subscription = buildSubscriptionV2(config, payload);
+
+  if (config.protocol === 'LD') {
+    return ngsi.ldSubscription(
+      subscription,
+      common.getParam('ldContext', config),
+      common.getParam('mimeType', config)
+    );
+  }
+
+  return subscription;
+}
+
+function buildSubscriptionV2(config, payload) {
   const out = Object.create(null);
 
   out.subject = buildSubject(config, payload);
   out.notification = buildNotification(config);
 
   return out;
+}
+
+function buildHeaders(config) {
+  const headers = Object.create(null);
+
+  if (common.isLD(config)) {
+    headers['content-type'] = 'application/ld+json';
+  } else {
+    headers['content-type'] = 'application/json';
+  }
+
+  return headers;
 }
 
 module.exports = function(RED) {
@@ -138,7 +167,7 @@ module.exports = function(RED) {
         response = await http.post(
           `${endpoint}/${common.apiPrefix(config)}/subscriptions/`,
           subscription,
-          common.buildHeaders(endpointConfig)
+          buildHeaders(config)
         );
       } catch (e) {
         msg.payload = { e };
