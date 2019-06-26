@@ -5,12 +5,12 @@ const assert = require('chai').assert;
 const http = require('../src/http.js');
 
 const helper = require('node-red-node-test-helper');
-const testedNode = require('../src/nodes/NGSI/subscriber/subscriber.js');
+const testedNode = require('../src/nodes/NGSI/subscription/subscription.js');
 const brokerNode = require('../src/nodes/NGSI/contextbroker/contextbroker.js');
 
 helper.init(require.resolve('node-red'));
 
-describe('NGSI Subscriber Node', function() {
+describe('NGSI Subscription Node', function() {
   const ENDPOINT = 'http://localhost:1026';
   const TENANT = 'test';
   const HEADERS = {
@@ -52,7 +52,7 @@ describe('NGSI Subscriber Node', function() {
       configNode,
       {
         id: 'testedNode',
-        type: 'NGSI-Subscriber',
+        type: 'NGSI-Subscription',
         name: 'tested',
         endpoint: configNode.id
       }
@@ -70,7 +70,7 @@ describe('NGSI Subscriber Node', function() {
       configNode,
       {
         id: 'testedNode',
-        type: 'NGSI-Subscriber',
+        type: 'NGSI-Subscription',
         name: 'tested',
         wires: [['helperNode']],
         endpoint: configNode.id,

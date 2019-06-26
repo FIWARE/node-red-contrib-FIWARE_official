@@ -25,7 +25,7 @@
         }
     };
 
-    RED.nodes.registerType('NGSI-Subscriber',{
+    RED.nodes.registerType('NGSI-Subscription',{
         category: 'NGSI',
         color: '#d8bfd8',
         defaults: {
@@ -62,22 +62,22 @@
         icon: 'icons/fiware.png',
 
         label: function() {
-            return this.name || this.entityType || 'NGSI Subscriber';
+            return this.name || this.entityType || 'NGSI Subscription';
         },
         oneditprepare: function () {
             var tabs = RED.tabs.create({
-                id: "node-ngsi-subscriber-tabs",
+                id: "node-ngsi-subscription-tabs",
                 onchange: function(tab) {
-                    $("#node-ngsi-subscriber-tabs-content").children().hide();
+                    $("#node-ngsi-subscription-tabs-content").children().hide();
                     $("#" + tab.id).show();
                 }
             });
             tabs.addTab({
-                id: "ngsi-subscriber-tab-subscription",
+                id: "ngsi-subscription-tab-subscription",
                 label: "Subscription"
             });
             tabs.addTab({
-                id: "ngsi-subscriber-tab-notification",
+                id: "ngsi-subscription-tab-notification",
                 label: "Notification"
             });
 
@@ -105,7 +105,7 @@
     }
 </script>
 
-<script type="text/x-red" data-template-name="NGSI-Subscriber">
+<script type="text/x-red" data-template-name="NGSI-Subscription">
     <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
@@ -118,11 +118,11 @@
         </select>
     </div>
     <div class="form-row">
-        <ul style="background: #fff; min-width: 600px; margin-bottom: 20px;" id="node-ngsi-subscriber-tabs"></ul>
+        <ul style="background: #fff; min-width: 600px; margin-bottom: 20px;" id="node-ngsi-subscription-tabs"></ul>
     </div>
 
-    <div id="node-ngsi-subscriber-tabs-content" style="min-height: 170px;">
-        <div id="ngsi-subscriber-tab-subscription" style="display:none">
+    <div id="node-ngsi-subscription-tabs-content" style="min-height: 170px;">
+        <div id="ngsi-subscription-tab-subscription" style="display:none">
             <div class="form-row">
                 <label for="node-input-endpoint"><i class="icon-tag"></i> Endpoint</label>
                 <input type="text" id="node-input-endpoint" placeholder="https://orion.lab.fiware.org">
@@ -149,7 +149,7 @@
             </div>
         </div>
 
-        <div id="ngsi-subscriber-tab-notification" style="display:none">
+        <div id="ngsi-subscription-tab-notification" style="display:none">
             <div class="form-row">
                 <label for="node-input-notificationEndpoint"><i class="icon-tag"></i> Notification Endpoint</label>
                 <input type="text" id="node-input-notificationEndpoint" placeholder="http://localhost:1880">
@@ -177,7 +177,7 @@
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="NGSI-Subscriber">
+<script type="text/x-red" data-help-name="NGSI-Subscription">
     <p>A simple node that allows to create an NGSI(v2, LD) Subscription.
     See the <a href="https://fiware.github.io/specifications/ngsiv2/stable/">NGSIv2</a>
     or the <a href="https://www.etsi.org/deliver/etsi_gs/CIM/001_099/009/01.01.01_60/gs_CIM009v010101p.pdf">NGSI-LD</a>

@@ -12,7 +12,7 @@
       "Entity": "src/nodes/NGSI/entity/entity.js",
       "Dataset": "src/nodes/NGSI/dataset/dataset.js",
       "Updater": "src/nodes/NGSI/updater/updater.js",
-      "Subscriber": "src/nodes/NGSI/subscriber/subscriber.js",
+      "Subscription": "src/nodes/NGSI/subscription/subscription.js",
       "Context-Broker": "src/nodes/NGSI/contextbroker/contextbroker.js"
     }
   },

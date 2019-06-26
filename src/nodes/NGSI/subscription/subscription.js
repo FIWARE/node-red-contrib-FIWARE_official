@@ -174,5 +174,5 @@ module.exports = function(RED) {
     });
   }
 
-  RED.nodes.registerType('NGSI-Subscriber', NgsiSubscriberNode);
+  RED.nodes.registerType('NGSI-Subscription', NgsiSubscriberNode);
 };
