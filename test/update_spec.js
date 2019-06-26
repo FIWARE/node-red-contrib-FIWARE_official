@@ -5,14 +5,14 @@ const assert = require('chai').assert;
 const http = require('../src/http.js');
 
 const helper = require('node-red-node-test-helper');
-const testedNode = require('../src/nodes/NGSI/updater/updater.js');
+const testedNode = require('../src/nodes/NGSI/update/update.js');
 const brokerNode = require('../src/nodes/NGSI/contextbroker/contextbroker.js');
 
 const data = require('./test_data.json');
 
 helper.init(require.resolve('node-red'));
 
-describe('NGSI Updater Node', function() {
+describe('NGSI Update Node', function() {
   const ENDPOINT = 'http://localhost:1026';
   const TENANT = 'test';
   const HEADERS = {
@@ -47,7 +47,7 @@ describe('NGSI Updater Node', function() {
       configNode,
       {
         id: 'testedNode',
-        type: 'NGSI-Updater',
+        type: 'NGSI-Update',
         name: 'tested',
         endpoint: configNode.id
       }
@@ -65,7 +65,7 @@ describe('NGSI Updater Node', function() {
       configNode,
       {
         id: 'testedNode',
-        type: 'NGSI-Updater',
+        type: 'NGSI-Update',
         name: 'tested',
         wires: [['helperNode']],
         endpoint: configNode.id,

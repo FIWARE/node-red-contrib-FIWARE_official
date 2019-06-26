@@ -17,7 +17,7 @@
         }
     };
 
-    RED.nodes.registerType('NGSI-Updater',{
+    RED.nodes.registerType('NGSI-Update',{
         category: 'NGSI',
         color: '#feb236',
         defaults: {
@@ -43,7 +43,7 @@
         outputs: 1,
         icon: 'icons/fiware.png',
         label: function() {
-            return this.name || 'NGSI Updater';
+            return this.name || 'NGSI Update';
         }
     });
 
@@ -67,7 +67,7 @@
     }
 </script>
 
-<script type="text/x-red" data-template-name="NGSI-Updater">
+<script type="text/x-red" data-template-name="NGSI-Update">
     <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
@@ -104,7 +104,7 @@
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="NGSI-Updater">
+<script type="text/x-red" data-help-name="NGSI-Update">
     <p>
     A simple node that allows to update NGSI(LD,v2) Entity(ies). Entity data shall be provided as part
     of the <code>msg.payload</code>.

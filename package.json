@@ -11,7 +11,7 @@
     "nodes": {
       "Entity": "src/nodes/NGSI/entity/entity.js",
       "Dataset": "src/nodes/NGSI/dataset/dataset.js",
-      "Updater": "src/nodes/NGSI/updater/updater.js",
+      "Update":  "src/nodes/NGSI/update/update.js",
       "Subscription": "src/nodes/NGSI/subscription/subscription.js",
       "Context-Broker": "src/nodes/NGSI/contextbroker/contextbroker.js"
     }

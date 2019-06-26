@@ -139,5 +139,5 @@ module.exports = function(RED) {
     });
   }
 
-  RED.nodes.registerType('NGSI-Updater', NgsiUpdaterNode);
+  RED.nodes.registerType('NGSI-Update', NgsiUpdaterNode);
 };
