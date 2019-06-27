@@ -62,7 +62,7 @@ function buildPayloadV2(config, payload) {
   }
 
   const out = {
-    actionType: 'append',
+    actionType: common.getParam('updateMode', config),
     entities: entityData
   };
 
@@ -71,6 +71,7 @@ function buildPayloadV2(config, payload) {
 
 // eslint-disable-next-line
 function buildPayloadLD(config, payload) {
+  // TODO: Build LD payload
   return {};
 }
 

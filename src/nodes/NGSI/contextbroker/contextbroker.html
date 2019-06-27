@@ -3,7 +3,7 @@
 <script type="text/javascript">
 
     const endpointValidator = function(required, v) {
-        if (!required && v.trim.length() == 0) {
+        if (!required && v && v.trim().length() == 0) {
             return true;
         }
 

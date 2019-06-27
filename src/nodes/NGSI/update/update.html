@@ -33,7 +33,12 @@
             },
 
             updateMode: {
-              value: 'upsert'
+                value: 'upsert-replace',
+                required: true
+            },
+
+            updateModev2: {
+                value: 'replace'
             },
 
             ldContext: { value: defLdContext },
@@ -47,24 +52,46 @@
         }
     });
 
-    function protocolChanged(e) {
+    function ngsi_update_protocolChanged(e) {
       if (e.target.value ==  'v2') {
-          toggleV2();
+          ngsi_update_toggleV2();
       }
       else {
-          toggleLD();
+          ngsi_update_toggleLD();
       }
     }
 
-    function toggleLD() {
+    const ldModes = ['upsert-replace', 'upsert-update', 'updateLD', 'update-noOverwrite'];
+    const v2Modes = ['append', 'append-strict', 'update', 'replace'];
+
+    function ngsi_update_toggleLD() {
         document.getElementById('ldContext').hidden = false;
         document.getElementById('mimeType').hidden = false;
+
+        ngsi_update_toggleModes(ldModes, false);
+        ngsi_update_toggleModes(v2Modes, true);
     }
 
-    function toggleV2() {
+    function ngsi_update_toggleV2() {
        document.getElementById('ldContext').hidden = true;
        document.getElementById('mimeType').hidden = true;
+
+        ngsi_update_toggleModes(ldModes, true);
+        ngsi_update_toggleModes(v2Modes, false);
     }
+
+    function ngsi_update_toggleModes(modes, value) {
+        const options = document.getElementById('node-input-updateMode').options;
+
+        modes.forEach(mode => {
+            options.namedItem(mode).hidden = value;
+        });
+
+        if (!value) {
+            options.namedItem(modes[0]).selected = true;
+        }
+    }
+
 </script>
 
 <script type="text/x-red" data-template-name="NGSI-Update">
@@ -78,17 +105,33 @@
     </div>
     <div class="form-row">
         <label for="node-input-protocol"><i class="icon-tag"></i> Protocol</label>
-        <select id="node-input-protocol" onchange="protocolChanged(event)">
+        <select id="node-input-protocol" onchange="ngsi_update_protocolChanged(event)">
             <option value="LD" selected>NGSI-LD</option>
             <option value="v2">NGSIv2</option>
         </select>
     </div>
-    <div class="form-row">
+    <div class="form-row" id="update-mode">
         <label for="node-input-updateMode"><i class="icon-tag"></i> Update Mode</label>
         <select id="node-input-updateMode">
-            <option value="upsert" selected>upsert</option>
+            <!-- LD Modes -->
+            <option id="upsert-replace" value="upsert-replace">upsert with replacement</option>
+            <option id="upsert-update" value="upsert-update">upsert with update</option>
+            <option id="updateLD" value="update">update</option>
+            <option id="update-noOverwrite" value="update-noOverwrite">update with no overwrite</option>
+            <!-- V2 Modes -->
+            <option id="append" value="append" hidden>append</option>
+            <option id="append-strict" value="appendStrict" hidden>appendStrict</option>
+            <option id="update" value="update" hidden>update</option>
+            <option id="replace" value="replace" hidden>replace</option>
+        </select>
+    </div>
+    <div class="form-row" id="update-modev2" hidden>
+        <label for="node-input-updateModev2"><i class="icon-tag"></i> Update Mode</label>
+        <select id="node-input-updateModev2">
+            <option value="append" selected>append</option>
+            <option value="append-strict">appendStrict</option>
             <option value="update">update</option>
-            <option value="update-noOverwrite" selected>update-noOverwrite</option>
+            <option value="replace">replace</option>
         </select>
     </div>
     <div class="form-row" id="ldContext">
