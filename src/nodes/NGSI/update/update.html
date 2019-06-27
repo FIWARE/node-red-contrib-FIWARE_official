@@ -4,19 +4,6 @@
     const defLdContext =
         'https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/defaultContext/defaultContext.jsonld';
 
-    const endpointValidator = function(v) {
-        try {
-            const url = new URL(v);
-            if (url.protocol !== 'http:' && url.protocol !== 'https:') {
-                return false;
-            }
-            return true;
-        }
-        catch(e) {
-            return false;
-        }
-    };
-
     RED.nodes.registerType('NGSI-Update',{
         category: 'NGSI',
         color: '#feb236',
@@ -38,7 +25,8 @@
             },
 
             updateModev2: {
-                value: 'replace'
+                value: 'append',
+                required: true
             },
 
             ldContext: { value: defLdContext },
@@ -61,34 +49,28 @@
       }
     }
 
-    const ldModes = ['upsert-replace', 'upsert-update', 'updateLD', 'update-noOverwrite'];
-    const v2Modes = ['append', 'append-strict', 'update', 'replace'];
-
     function ngsi_update_toggleLD() {
         document.getElementById('ldContext').hidden = false;
         document.getElementById('mimeType').hidden = false;
 
-        ngsi_update_toggleModes(ldModes, false);
-        ngsi_update_toggleModes(v2Modes, true);
+        document.getElementById('update-mode').hidden = false;
+        document.getElementById('update-mode-v2').hidden = true;
     }
 
     function ngsi_update_toggleV2() {
        document.getElementById('ldContext').hidden = true;
        document.getElementById('mimeType').hidden = true;
 
-        ngsi_update_toggleModes(ldModes, true);
-        ngsi_update_toggleModes(v2Modes, false);
+       document.getElementById('update-mode').hidden = true;
+       document.getElementById('update-mode-v2').hidden = false;
     }
 
-    function ngsi_update_toggleModes(modes, value) {
-        const options = document.getElementById('node-input-updateMode').options;
-
-        modes.forEach(mode => {
-            options.namedItem(mode).hidden = value;
-        });
-
-        if (!value) {
-            options.namedItem(modes[0]).selected = true;
+    function ngsi_update_mimeTypeChanged(e) {
+        if (e.target.value == 'application/json') {
+            document.getElementById('ldContext').hidden = false;
+        }
+        else {
+            document.getElementById('ldContext').hidden = true;
         }
     }
 
@@ -114,36 +96,32 @@
         <label for="node-input-updateMode"><i class="icon-tag"></i> Update Mode</label>
         <select id="node-input-updateMode">
             <!-- LD Modes -->
-            <option id="upsert-replace" value="upsert-replace">upsert with replacement</option>
-            <option id="upsert-update" value="upsert-update">upsert with update</option>
-            <option id="updateLD" value="update">update</option>
-            <option id="update-noOverwrite" value="update-noOverwrite">update with no overwrite</option>
-            <!-- V2 Modes -->
-            <option id="append" value="append" hidden>append</option>
-            <option id="append-strict" value="appendStrict" hidden>appendStrict</option>
-            <option id="update" value="update" hidden>update</option>
-            <option id="replace" value="replace" hidden>replace</option>
+            <option value="upsert-replace" selected>upsert with replacement</option>
+            <option value="upsert-update">upsert with update</option>
+            <option value="updateLD">update</option>
+            <option value="update-noOverwrite">update with no overwrite</option>
         </select>
     </div>
-    <div class="form-row" id="update-modev2" hidden>
+    <div class="form-row" id="update-mode-v2" hidden>
         <label for="node-input-updateModev2"><i class="icon-tag"></i> Update Mode</label>
         <select id="node-input-updateModev2">
+            <!-- v2 Modes -->
             <option value="append" selected>append</option>
-            <option value="append-strict">appendStrict</option>
+            <option value="appendStrict">appendStrict</option>
             <option value="update">update</option>
             <option value="replace">replace</option>
         </select>
     </div>
-    <div class="form-row" id="ldContext">
-        <label for="node-input-ldContext"><i class="icon-tag"></i> JSON-LD @context</label>
-        <input required type="url" id="node-input-ldContext" placeholder="NGSI-LD @context">
-    </div>
     <div class="form-row" id="mimeType">
         <label for="node-input-mimeType"><i class="icon-tag"></i> MIME Type</label>
-        <select id="node-input-mimeType">
+        <select id="node-input-mimeType" onchange="ngsi_update_mimeTypeChanged(event)">
             <option value="application/json">JSON</option>
             <option value="application/ld+json" selected>JSON-LD</option>
         </select>
+    </div>
+    <div class="form-row" id="ldContext" hidden>
+        <label for="node-input-ldContext"><i class="icon-tag"></i> JSON-LD @context</label>
+        <input required type="url" id="node-input-ldContext" placeholder="NGSI-LD @context">
     </div>
 </script>
 

@@ -70,7 +70,7 @@ describe('NGSI Update Node', function() {
         wires: [['helperNode']],
         endpoint: configNode.id,
         protocol: 'V2', // V2 for the time being. TODO: LD also supported
-        updateMode: 'append'
+        updateModev2: 'append'
       },
       { id: 'helperNode', type: 'helper' }
     ];

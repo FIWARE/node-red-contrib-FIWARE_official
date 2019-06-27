@@ -14,19 +14,23 @@ function isLD(config) {
   return config.protocol === 'LD';
 }
 
-function buildHeaders(config) {
+function addLinkHeader(config, headers) {
+  const linkHeaderValue = `<${
+    config.ldContext
+  }>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"`;
+  headers.Link = linkHeaderValue;
+}
+
+function buildQueryHeaders(config, endpointConfig) {
   const headers = Object.create(null);
 
   if (isLD(config)) {
-    const linkHeaderValue = `<${
-      config.ldContext
-    }>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"`;
-    headers.Link = linkHeaderValue;
+    addLinkHeader(config, headers);
     headers.Accept = config.mimeType;
   }
 
-  if (config.service && config.service.trim()) {
-    headers['Fiware-Service'] = config.service;
+  if (endpointConfig.service && endpointConfig.service.trim()) {
+    headers['Fiware-Service'] = endpointConfig.service;
   }
 
   return headers;
@@ -45,6 +49,7 @@ function getParam(paramName, config, msg) {
 module.exports = {
   apiPrefix,
   isLD,
-  buildHeaders,
+  buildQueryHeaders,
+  addLinkHeader,
   getParam
 };

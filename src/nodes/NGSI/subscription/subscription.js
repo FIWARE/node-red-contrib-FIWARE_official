@@ -133,13 +133,17 @@ function buildSubscriptionV2(config, payload) {
   return out;
 }
 
-function buildHeaders(config) {
+function buildHeaders(config, endpointConfig) {
   const headers = Object.create(null);
 
   if (common.isLD(config)) {
-    headers['content-type'] = 'application/ld+json';
+    headers['Content-Type'] = 'application/ld+json';
   } else {
-    headers['content-type'] = 'application/json';
+    headers['Content-Type'] = 'application/json';
+  }
+
+  if (endpointConfig.service && endpointConfig.service.trim()) {
+    headers['Fiware-Service'] = endpointConfig.service;
   }
 
   return headers;
@@ -167,7 +171,7 @@ module.exports = function(RED) {
         response = await http.post(
           `${endpoint}/${common.apiPrefix(config)}/subscriptions/`,
           subscription,
-          buildHeaders(config)
+          buildHeaders(config, endpointConfig)
         );
       } catch (e) {
         msg.payload = { e };

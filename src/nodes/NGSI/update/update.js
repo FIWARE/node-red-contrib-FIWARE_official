@@ -13,6 +13,8 @@
 const http = require('../../../http.js');
 const common = require('../../../common.js');
 
+const JSON_MTYPE = 'application/json';
+
 function validate(config, msg) {
   let out = true;
 
@@ -42,6 +44,17 @@ function validate(config, msg) {
 }
 
 function buildPayloadV2(config, payload) {
+  const entityData = getEntityData(payload);
+
+  const out = {
+    actionType: common.getParam('updateModev2', config),
+    entities: entityData
+  };
+
+  return out;
+}
+
+function getEntityData(payload) {
   let data = payload;
 
   if (typeof data === 'string') {
@@ -61,18 +74,12 @@ function buildPayloadV2(config, payload) {
     entityData = [data];
   }
 
-  const out = {
-    actionType: common.getParam('updateMode', config),
-    entities: entityData
-  };
-
-  return out;
+  return entityData;
 }
 
 // eslint-disable-next-line
 function buildPayloadLD(config, payload) {
-  // TODO: Build LD payload
-  return {};
+  return getEntityData(payload);
 }
 
 function buildPayload(config, payload) {
@@ -81,6 +88,57 @@ function buildPayload(config, payload) {
   }
 
   return buildPayloadV2(config, payload);
+}
+
+function getResource(config) {
+  if (!common.isLD(config)) {
+    return 'op/update';
+  }
+
+  const updateMode = common.getParam('updateMode', config);
+
+  const operationMap = {
+    'upsert-replace': {
+      resource: 'upsert',
+      params: ''
+    },
+    'upsert-update': {
+      resource: 'upsert',
+      params: 'options=update'
+    },
+    update: {
+      resource: 'update',
+      params: ''
+    },
+    'update-noOverwrite': {
+      resource: 'update',
+      params: 'options=noOverwrite'
+    }
+  };
+
+  const operationInfo = operationMap[updateMode];
+
+  return `entityOperations/${operationInfo.resource}?${operationInfo.params}`;
+}
+
+function buildHeaders(config, endpointConfig) {
+  const headers = Object.create(null);
+
+  if (common.isLD(config)) {
+    headers['Content-Type'] = config.mimeType;
+
+    if (config.mimeType === JSON_MTYPE) {
+      common.addLinkHeader(config, headers);
+    }
+  } else {
+    headers['Content-Type'] = JSON_MTYPE;
+  }
+
+  if (endpointConfig.service && endpointConfig.service.trim()) {
+    headers['Fiware-Service'] = endpointConfig.service;
+  }
+
+  return headers;
 }
 
 module.exports = function(RED) {
@@ -98,7 +156,9 @@ module.exports = function(RED) {
         return;
       }
 
-      const resource = `${endpoint}/${common.apiPrefix(config)}/op/update`;
+      const resource = `${endpoint}/${common.apiPrefix(config)}/${getResource(
+        config
+      )}`;
 
       let response = null;
       try {
@@ -107,7 +167,7 @@ module.exports = function(RED) {
         response = await http.post(
           resource,
           payload,
-          common.buildHeaders(endpointConfig)
+          buildHeaders(config, endpointConfig)
         );
       } catch (e) {
         msg.payload = null;

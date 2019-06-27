@@ -3,19 +3,6 @@
     const defLdContext =
         'https://forge.etsi.org/gitlab/NGSI-LD/NGSI-LD/raw/master/defaultContext/defaultContext.jsonld';
 
-    const endpointValidator = function(v) {
-        try {
-            const url = new URL(v);
-            if (url.protocol !== 'http:' && url.protocol !== 'https:') {
-                return false;
-            }
-            return true;
-        }
-        catch(e) {
-            return false;
-        }
-    };
-
     RED.nodes.registerType('NGSI-Dataset',{
         category: 'NGSI',
         color: '#a6bbcf',
