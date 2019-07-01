@@ -21,7 +21,9 @@ function addLinkHeader(config, headers) {
   headers.Link = linkHeaderValue;
 }
 
-function buildQueryHeaders(config, endpointConfig) {
+async function buildQueryHeaders(config, endpointConfig) {
+  console.log('Build headers');
+
   const headers = Object.create(null);
 
   if (isLD(config)) {
@@ -33,6 +35,13 @@ function buildQueryHeaders(config, endpointConfig) {
     headers['Fiware-Service'] = endpointConfig.service;
   }
 
+  console.log(endpointConfig.securityEnabled);
+
+  if (endpointConfig.securityEnabled === true) {
+    console.log('Security is enabled');
+    console.log(await endpointConfig.getToken());
+  }
+
   return headers;
 }
 
@@ -40,7 +49,7 @@ function getParam(paramName, config, msg) {
   let paramValue = msg && msg[paramName] && msg[paramName].trim();
 
   if (!paramValue) {
-    paramValue = config[paramName] && config[paramName].trim();
+    paramValue = config && config[paramName] && config[paramName].trim();
   }
 
   return paramValue;

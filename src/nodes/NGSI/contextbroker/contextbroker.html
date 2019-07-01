@@ -44,7 +44,9 @@
 
         credentials: {
             username: { type: 'text' },
-            password: { type: 'password' }
+            password: { type: 'password' },
+            client_id: { type: 'text' },
+            client_secret: { type: 'password' }
         },
 
         label: function() {
@@ -96,19 +98,40 @@
         </div>
 
         <div id="context-broker-tab-security" style="display:none">
-            <div class="form-row">
-                <label for="node-config-input-idmEndpoint"><i class="icon-tag"></i> IdM Endpoint</label>
-                <input required type="url" id="node-config-input-idmEndpoint" placeholder="https://idm.lab.fiware.org">
+            <div id="context-broker-idm">
+                <div class="palette-header">
+                    <i class="fa fa-angle-down"></i><span>Identity</span>
+                </div>
+                <div class="section-content" style="padding:10px 0 0 10px">
+                    <div class="form-row">
+                        <label for="node-config-input-idmEndpoint"><i class="icon-tag"></i> IdM Endpoint</label>
+                        <input required type="url" id="node-config-input-idmEndpoint" placeholder="https://account.fiware.org">
+                    </div>
+                    <div class="form-row">
+                        <label for="node-config-input-username"><i class="icon-tag"></i> Username</label>
+                        <input type="text" id="node-config-input-username">
+                    </div>
+                    <div class="form-row">
+                        <label for="node-config-input-password"><i class="icon-tag"></i> Password</label>
+                        <input type="password" id="node-config-input-password">
+                    </div>
+                </div>
             </div>
-            <div class="form-row">
-                <label for="node-config-input-username"><i class="icon-tag"></i> Username</label>
-                <input type="text" id="node-config-input-username">
+            <div id="context-broker-pep-proxy">
+                <div class="palette-header">
+                    <i class="fa fa-angle-down"></i><span>PEP Proxy</span>
+                </div>
+                <div class="section-content" style="padding:10px 0 0 10px">
+                    <div class="form-row">
+                        <label for="node-config-input-client_id"><i class="icon-tag"></i> Client ID</label>
+                        <input required type="url" id="node-config-input-client_id">
+                    </div>
+                    <div class="form-row">
+                        <label for="node-config-input-client_secret"><i class="icon-tag"></i> Client Secret</label>
+                        <input required type="password" id="node-config-input-client_secret">
+                    </div>
+                </div>
             </div>
-            <div class="form-row">
-                <label for="node-config-input-password"><i class="icon-tag"></i> Password</label>
-                <input type="password" id="node-config-input-password">
-            </div>
-
         </div>
 </script>
 
