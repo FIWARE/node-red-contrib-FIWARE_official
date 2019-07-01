@@ -22,8 +22,6 @@ function addLinkHeader(config, headers) {
 }
 
 async function buildQueryHeaders(config, endpointConfig) {
-  console.log('Build headers');
-
   const headers = Object.create(null);
 
   if (isLD(config)) {
@@ -35,11 +33,10 @@ async function buildQueryHeaders(config, endpointConfig) {
     headers['Fiware-Service'] = endpointConfig.service;
   }
 
-  console.log(endpointConfig.securityEnabled);
-
   if (endpointConfig.securityEnabled === true) {
-    console.log('Security is enabled');
-    console.log(await endpointConfig.getToken());
+    const token = await endpointConfig.getToken();
+
+    headers['X-Auth-Token'] = token;
   }
 
   return headers;

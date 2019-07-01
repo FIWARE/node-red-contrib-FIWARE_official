@@ -97,7 +97,7 @@ module.exports = function(RED) {
       try {
         response = await http.get(
           resource,
-          common.buildQueryHeaders(config, endpointConfig)
+          await common.buildQueryHeaders(config, endpointConfig)
         );
       } catch (e) {
         msg.payload = { e };

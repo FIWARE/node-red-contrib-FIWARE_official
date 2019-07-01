@@ -69,7 +69,7 @@ module.exports = function(RED) {
       try {
         response = await http.get(
           `${endpoint}/${common.apiPrefix(config)}/entities/?${parameters}`,
-          common.buildQueryHeaders(config, endpointConfig)
+          await common.buildQueryHeaders(config, endpointConfig)
         );
       } catch (e) {
         msg.payload = { e };

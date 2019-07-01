@@ -47,15 +47,17 @@ module.exports = function(RED) {
     this.getToken = async function() {
       const idm = this.idmEndpoint;
 
-      if (this.currentToken && this.tokenExpires && this.tokenExpires.getTime() > Date.now()) {
-        return currentToken;
+      if (
+        this.currentToken &&
+        this.tokenExpires &&
+        this.tokenExpires.getTime() > Date.now()
+      ) {
+        return this.currentToken;
       }
 
       this.currentToken = null;
 
       const idmApiEndpoint = `${idm}/oauth2/token`;
-
-      console.log(`${this.client_id}:${this.client_secret}`);
 
       const authBearer = Buffer.from(
         `${this.client_id}:${this.client_secret}`
@@ -78,11 +80,9 @@ module.exports = function(RED) {
         const statusCode = response.response.statusCode;
 
         if (statusCode === 200) {
-          this.currentToken = response.response.headers['X-Subject-Token'];
+          this.currentToken = response.body.access_token;
 
-          this.tokenExpires = Date.parse(
-            response.body.token && response.body.token.expires_at
-          );
+          this.tokenExpires = new Date(Date.now() + response.body.expires_in);
         } else {
           this.error(`Error while obtaining token. Status Code: ${statusCode}`);
         }
