@@ -1,37 +1,34 @@
 {
-    "@context": [
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
-        "https://schema.lab.fiware.org/ld/context"
-    ],
     "id": "urn:ngsi-ld:AgriCrop:df72dc57-1eb9-42a3-88a9-8647ecc954b4",
     "type": "AgriCrop",
-    "createdAt": "2017-01-01T01:20:00Z",
-    "modifiedAt": "2017-05-04T12:30:00Z",
+    "dateCreated": {
+        "type": "DateTime",
+        "value":"2017-01-01T01:20:00Z"
+    },
+    "dateModified": {
+        "type": "DateTime",
+        "value": "2017-05-04T12:30:00Z"
+    },
     "name": {
-        "type": "Property",
         "value": "Wheat"
     },
     "alternateName": {
-        "type": "Property",
         "value": "Triticum aestivum"
     },
     "agroVocConcept": {
-        "type": "Property",
+        "type": "URL",
         "value": "http://aims.fao.org/aos/agrovoc/c_7951"
     },
     "seeAlso": {
-        "type": "Property",
         "value" :[
             "https://example.org/concept/wheat",
             "https://datamodel.org/example/wheat"
         ]
     },
     "description": {
-        "type": "Property",
         "value": "Spring wheat"
     },
     "relatedSource": {
-        "type": "Property",
         "value": [
             {
                 "application": "urn:ngsi-ld:AgriApp:72d9fb43-53f8-4ec8-a33c-fa931360259a",
@@ -41,27 +38,26 @@
     },
     "agriSoil": {
         "type": "Relationship",
-        "object": [
+        "value": [
             "urn:ngsi-ld:AgriSoil:00411b56-bd1b-4551-96e0-a6e7fde9c840",
             "urn:ngsi-ld:AgriSoil:e8a8389a-edf5-4345-8d2c-b98ac1ce8e2a"
         ]
     },
     "agriFertiliser": {
         "type": "Relationship",
-        "object": [
+        "value": [
             "urn:ngsi-ld:AgriFertiliser:1b0d6cf7-320c-4a2b-b2f1-4575ea850c73",
             "urn:ngsi-ld:AgriFertiliser:380973c8-4d3b-4723-a899-0c0c5cc63e7e"
         ]
     },
-    "agriPest": {
+    "agriPest":{
         "type": "Relationship",
-        "object": [
+        "value": [
             "urn:ngsi-ld:AgriPest:1b0d6cf7-320c-4a2b-b2f1-4575ea850c73",
             "urn:ngsi-ld:AgriPest:380973c8-4d3b-4723-a899-0c0c5cc63e7e"
         ]
     },
     "plantingFrom": {
-        "type": "Property",
         "value": [
             {
                 "dateRange": "-09-28/-10-12",
@@ -74,7 +70,6 @@
         ]
     },
     "harvestingInterval": {
-        "type": "Property",
         "value": [
             {
                 "dateRange": "-03-21/-04-01",
@@ -87,7 +82,6 @@
         ]
     },
     "wateringFrequency": {
-        "type": "Property",
         "value": "daily"
     }
 }

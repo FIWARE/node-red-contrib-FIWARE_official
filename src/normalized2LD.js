@@ -4,7 +4,7 @@ const LD_CONTEXT = 'https://schema.lab.fiware.org/ld/context';
 const ETSI_CORE_CONTEXT = 'https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld';
 
 function ngsildUri(typePart, idPart) {
-  return 'urn:ngsi-ld:${typePart}:${idPart}';
+  return `urn:ngsi-ld:${typePart}:${idPart}`;
 }
 
 function ldId(entityId, entityType) {
@@ -66,6 +66,11 @@ function v2ToLD(entity, node) {
       continue;
     }
 
+    if(key === 'dateModified') {
+      out.modifiedAt = normalizeDate(entity[key].value);
+      continue;
+    }
+
     const attr = entity[key];
     out[key] = {};
     let ldAttr = out[key];
@@ -80,7 +85,7 @@ function v2ToLD(entity, node) {
         ldAttr.object = [];
 
         for(let obj in auxObj) {
-          ldAttr.object.append(ldObject(key, obj));
+          ldAttr.object.push(ldObject(key, auxObj[obj]));
         }
       } else {
         ldAttr.object = ldObject(key, String(auxObj));

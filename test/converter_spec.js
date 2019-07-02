@@ -2,31 +2,16 @@
 
 const assert = require('chai').assert;
 
-const http = require('../src/http.js');
-
 const helper = require('node-red-node-test-helper');
-const testedNode = require('../src/nodes/NGSI/updater/updater.js');
-const brokerNode = require('../src/nodes/NGSI/contextbroker/contextbroker.js');
+const testedNode = require('../src/nodes/NGSI/converter/converter.js');
+// const brokerNode = require('../src/nodes/NGSI/contextbroker/contextbroker.js');
 
-const data = require('./data/v2_test_data.json');
+const v2_data = require('./data/v2_agri_test.json');
+const LD_data = require('./data/LD_test_data.json');
 
 helper.init(require.resolve('node-red'));
 
-describe('NGSI Updater Node', function() {
-  const ENDPOINT = 'http://localhost:1026';
-  const TENANT = 'test';
-  const HEADERS = {
-    'Fiware-Service': TENANT
-  };
-
-  const configNode = {
-    id: 'testBroker',
-    name: 'broker',
-    type: 'Context-Broker',
-    endpoint: ENDPOINT,
-    service: TENANT
-  };
-
+describe('NGSI Converter Node', function() {
   before(done => {
     helper.startServer(done);
   });
@@ -36,63 +21,88 @@ describe('NGSI Updater Node', function() {
     done();
   });
 
-  after(function(done) {
-    http.del(`${ENDPOINT}/v2/entities/${data.id}`, HEADERS).then(() => {
-      helper.stopServer(done);
-    });
-  });
-
   it('should be loaded', function(done) {
     const flow = [
-      configNode,
       {
         id: 'testedNode',
-        type: 'NGSI-Updater',
-        name: 'tested',
-        endpoint: configNode.id
+        type: 'NGSI-Converter',
+        name: 'tested'
       }
     ];
 
-    helper.load([testedNode, brokerNode], flow, function() {
+    helper.load([testedNode], flow, function() {
       const testedNode = helper.getNode('testedNode');
       assert.propertyVal(testedNode, 'name', 'tested');
       done();
     });
   });
 
-  it('should update Entity', function(done) {
+  it('should convert JSON payload', function(done) {
     const flow = [
-      configNode,
       {
         id: 'testedNode',
-        type: 'NGSI-Updater',
+        type: 'NGSI-Converter',
         name: 'tested',
         wires: [['helperNode']],
-        endpoint: configNode.id,
-        protocol: 'V2' // V2 for the time being. LD also supported
       },
       { id: 'helperNode', type: 'helper' }
     ];
 
-    helper.load([testedNode, brokerNode], flow, function test() {
+    helper.load([testedNode], flow, function test() {
       const helperNode = helper.getNode('helperNode');
       const testedNode = helper.getNode('testedNode');
 
       helperNode.on('input', function(msg) {
         try {
-          const statusCode = msg.payload;
-          assert.equal(statusCode, 204);
+          const convertedData = msg.payload;
+          // const ldObj = JSON.parse(LD_data);
+          // assert.equal(convertedData, ldObj);
+          assert.equal(JSON.stringify(convertedData), JSON.stringify(LD_data));
           done();
         } catch (e) {
           done(e);
         }
       });
 
-      testedNode.on('call:error', () => {
-        done('Error called on node!!');
+      testedNode.on('call:error', (e) => {
+        done('Error called on node!! ' + e);
       });
 
-      testedNode.receive({ payload: data });
+      testedNode.receive({ payload: v2_data });
+    });
+  });
+
+  it('should convert string payload', function(done) {
+    const flow = [
+      {
+        id: 'testedNode',
+        type: 'NGSI-Converter',
+        name: 'tested',
+        wires: [['helperNode']],
+      },
+      { id: 'helperNode', type: 'helper' }
+    ];
+
+    helper.load([testedNode], flow, function test() {
+      const helperNode = helper.getNode('helperNode');
+      const testedNode = helper.getNode('testedNode');
+
+      helperNode.on('input', function(msg) {
+        try {
+          const convertedData = msg.payload;
+
+          assert.equal(JSON.stringify(convertedData), JSON.stringify(LD_data));
+          done();
+        } catch (e) {
+          done(e);
+        }
+      });
+
+      testedNode.on('call:error', (e) => {
+        done('Error called on node!! ' + e);
+      });
+
+      testedNode.receive({ payload: JSON.stringify(v2_data) });
     });
   });
 });

@@ -11,7 +11,7 @@
  *
  */
 
-const converter = require('../../../ngsi-converter.js');
+const converter = require('../../../normalized2LD.js');
 
 module.exports = function(RED) {
   function NgsiConverterNode(config) {
