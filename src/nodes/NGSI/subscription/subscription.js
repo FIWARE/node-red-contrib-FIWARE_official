@@ -133,7 +133,7 @@ function buildSubscriptionV2(config, payload) {
   return out;
 }
 
-function buildHeaders(config, endpointConfig) {
+async function buildHeaders(config, endpointConfig) {
   const headers = Object.create(null);
 
   if (common.isLD(config)) {
@@ -144,6 +144,11 @@ function buildHeaders(config, endpointConfig) {
 
   if (endpointConfig.service && endpointConfig.service.trim()) {
     headers['Fiware-Service'] = endpointConfig.service;
+  }
+
+  if (endpointConfig.securityEnabled) {
+    const token = await endpointConfig.getToken();
+    headers['X-Auth-Token'] = token;
   }
 
   return headers;
@@ -171,7 +176,7 @@ module.exports = function(RED) {
         response = await http.post(
           `${endpoint}/${common.apiPrefix(config)}/subscriptions/`,
           subscription,
-          buildHeaders(config, endpointConfig)
+          await buildHeaders(config, endpointConfig)
         );
       } catch (e) {
         msg.payload = { e };
