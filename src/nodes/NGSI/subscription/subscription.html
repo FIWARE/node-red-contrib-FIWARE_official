@@ -18,13 +18,6 @@
         }
     };
 
-    const nodeValidator = function() {
-        if (this.entityId.trim().length == 0
-            && this.entityType.trim().length == 0) {
-            return false;
-        }
-    };
-
     RED.nodes.registerType('NGSI-Subscription',{
         category: 'NGSI',
         color: '#d8bfd8',
