@@ -1,6 +1,6 @@
 /**
  *
- *   NGSI Converter Node
+ *   NGSI v2ToLD Node
  *
  *   It converts a NGSI(v2,LD) entity to the other NGSI(v2,LD) format.
  *   E.g. v2 --> LD || LD --> v2
@@ -14,7 +14,7 @@
 const converter = require('../../../normalized2LD.js');
 
 module.exports = function(RED) {
-  function NgsiConverterNode(config) {
+  function NgsiV2ToLDNode(config) {
     RED.nodes.createNode(this, config);
     const node = this;
 
@@ -47,5 +47,5 @@ module.exports = function(RED) {
     });
   }
 
-  RED.nodes.registerType('NGSI-Converter', NgsiConverterNode);
+  RED.nodes.registerType('NGSI-v2ToLD', NgsiV2ToLDNode);
 };
