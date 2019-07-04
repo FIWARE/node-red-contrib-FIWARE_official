@@ -44,7 +44,7 @@ function ldObject(attributeName, entityId) {
   return out;
 }
 
-function v2ToLD(entity, node) {
+function v2ToLD(entity) {
   let out = {
     '@context': [ETSI_CORE_CONTEXT, LD_CONTEXT]
   }

@@ -6,8 +6,8 @@ const helper = require('node-red-node-test-helper');
 const testedNode = require('../src/nodes/NGSI/v2ToLD/v2ToLD.js');
 // const brokerNode = require('../src/nodes/NGSI/contextbroker/contextbroker.js');
 
-const v2_data = require('./data/v2_agri_test.json');
-const LD_data = require('./data/LD_test_data.json');
+const v2Data = require('./data/v2_agri_test.json');
+const ldData = require('./data/LD_test_data.json');
 
 helper.init(require.resolve('node-red'));
 
@@ -55,9 +55,9 @@ describe('NGSI v2ToLD Node', function() {
       helperNode.on('input', function(msg) {
         try {
           const convertedData = msg.payload;
-          // const ldObj = JSON.parse(LD_data);
+          // const ldObj = JSON.parse(ldData);
           // assert.equal(convertedData, ldObj);
-          assert.equal(JSON.stringify(convertedData), JSON.stringify(LD_data));
+          assert.equal(JSON.stringify(convertedData), JSON.stringify(ldData));
           done();
         } catch (e) {
           done(e);
@@ -68,7 +68,7 @@ describe('NGSI v2ToLD Node', function() {
         done('Error called on node!! ' + e);
       });
 
-      testedNode.receive({ payload: v2_data });
+      testedNode.receive({ payload: v2Data });
     });
   });
 
@@ -91,7 +91,7 @@ describe('NGSI v2ToLD Node', function() {
         try {
           const convertedData = msg.payload;
 
-          assert.equal(JSON.stringify(convertedData), JSON.stringify(LD_data));
+          assert.equal(JSON.stringify(convertedData), JSON.stringify(ldData));
           done();
         } catch (e) {
           done(e);
@@ -102,7 +102,7 @@ describe('NGSI v2ToLD Node', function() {
         done('Error called on node!! ' + e);
       });
 
-      testedNode.receive({ payload: JSON.stringify(v2_data) });
+      testedNode.receive({ payload: JSON.stringify(v2Data) });
     });
   });
 });
