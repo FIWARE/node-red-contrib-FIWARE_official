@@ -47,7 +47,7 @@ describe('NGSI v2ToLD Node', function() {
         id: 'testedNode',
         type: 'NGSI-v2ToLD',
         name: 'tested',
-        wires: [['helperNode']],
+        wires: [['helperNode']]
       },
       { id: 'helperNode', type: 'helper' }
     ];
@@ -68,7 +68,7 @@ describe('NGSI v2ToLD Node', function() {
         }
       });
 
-      testedNode.on('call:error', (e) => {
+      testedNode.on('call:error', e => {
         done('Error called on node!! ' + e);
       });
 
@@ -82,7 +82,7 @@ describe('NGSI v2ToLD Node', function() {
         id: 'testedNode',
         type: 'NGSI-v2ToLD',
         name: 'tested',
-        wires: [['helperNode']],
+        wires: [['helperNode']]
       },
       { id: 'helperNode', type: 'helper' }
     ];
@@ -102,7 +102,7 @@ describe('NGSI v2ToLD Node', function() {
         }
       });
 
-      testedNode.on('call:error', (e) => {
+      testedNode.on('call:error', e => {
         done('Error called on node!! ' + e);
       });
 

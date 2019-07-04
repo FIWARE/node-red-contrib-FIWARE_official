@@ -19,8 +19,7 @@ module.exports = function(RED) {
     const node = this;
 
     node.on('input', function(msg) {
-
-      if(!msg.payload) {
+      if (!msg.payload) {
         node.error('No payload provided');
         return;
       }
@@ -28,7 +27,7 @@ module.exports = function(RED) {
       // Validate JSON format
       let entity = msg.payload;
 
-      if(typeof msg.payload === 'string') {
+      if (typeof msg.payload === 'string') {
         try {
           entity = JSON.parse(msg.payload);
         } catch (SyntaxError) {
