@@ -21,6 +21,10 @@ describe('NGSI v2ToLD Node', function() {
     done();
   });
 
+  after(function(done) {
+    helper.stopServer(done);
+  });
+
   it('should be loaded', function(done) {
     const flow = [
       {

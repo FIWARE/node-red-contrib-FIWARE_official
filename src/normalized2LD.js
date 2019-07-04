@@ -45,11 +45,11 @@ function ldObject(attributeName, entityId) {
 }
 
 function v2ToLD(entity) {
-  let out = {
+  const out = {
     '@context': [ETSI_CORE_CONTEXT, LD_CONTEXT]
   }
 
-  for(let key in entity) {
+  for(const key in entity) {
 
     if(key === 'id') {
       out[key] = ldId(entity.id, entity.type);
@@ -73,7 +73,7 @@ function v2ToLD(entity) {
 
     const attr = entity[key];
     out[key] = {};
-    let ldAttr = out[key];
+    const ldAttr = out[key];
 
     if(!Object.prototype.hasOwnProperty.call(attr, 'type') || attr.type !== 'Relationship') {
       ldAttr.type = 'Property';
@@ -84,7 +84,7 @@ function v2ToLD(entity) {
       if(Array.isArray(auxObj)) {
         ldAttr.object = [];
 
-        for(let obj in auxObj) {
+        for(const obj in auxObj) {
           ldAttr.object.push(ldObject(key, auxObj[obj]));
         }
       } else {
@@ -109,13 +109,13 @@ function v2ToLD(entity) {
 
     if(Object.prototype.hasOwnProperty.call(attr, 'metadata')) {
       const metadata = attr.metadata;
-      for(let mkey in metadata) {
+      for(const mkey in metadata) {
         if(mkey === 'timestamp') {
           ldAttr.observedAt = normalizeDate(metadata[mkey].value);
         } else if(mkey === 'unitCode') {
           ldAttr.unitCode = metadata[mkey].value;
         } else {
-          let subAttr = {};
+          const subAttr = {};
           subAttr.type = 'Property';
           subAttr.value = metadata[mkey].value;
           ldAttr[mkey] = subAttr;
