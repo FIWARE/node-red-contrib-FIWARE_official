@@ -1,3 +1,14 @@
+/**
+ *
+ *   Converter script file
+ *
+ *   Copyright (c) 2019 FIWARE Foundation e.V.
+ *
+ *   @author Bjarke Hou Kammersgaard @Alexandra Institute A/S
+ *
+ *   Porting of https://github.com/FIWARE/dataModels/blob/master/tools/normalized2LD.py
+ */
+
 const URI = require('uri-js');
 
 const LD_CONTEXT = 'https://schema.lab.fiware.org/ld/context';
@@ -75,10 +86,7 @@ function v2ToLD(entity) {
     out[key] = {};
     const ldAttr = out[key];
 
-    if (
-      !Object.prototype.hasOwnProperty.call(attr, 'type') ||
-      attr.type !== 'Relationship'
-    ) {
+    if (!attr.type || attr.type !== 'Relationship') {
       ldAttr.type = 'Property';
       ldAttr.value = attr.value;
     } else {
@@ -99,24 +107,18 @@ function v2ToLD(entity) {
       ldAttr.type = 'GeoProperty';
     }
 
-    if (
-      Object.prototype.hasOwnProperty.call(attr, 'type') &&
-      attr.type === 'DateTime'
-    ) {
+    if (attr.type && attr.type === 'DateTime') {
       ldAttr.value = {
         '@type': 'DateTime',
         '@value': normalizeDate(attr.value)
       };
     }
 
-    if (
-      Object.prototype.hasOwnProperty.call(attr, 'type') &&
-      attr.type === 'PostalAddress'
-    ) {
+    if (attr.type && attr.type === 'PostalAddress') {
       ldAttr.value.type = 'PostalAddress';
     }
 
-    if (Object.prototype.hasOwnProperty.call(attr, 'metadata')) {
+    if (attr.metadata) {
       const metadata = attr.metadata;
       for (const mkey in metadata) {
         if (mkey === 'timestamp') {

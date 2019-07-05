@@ -4,7 +4,6 @@ const assert = require('chai').assert;
 
 const helper = require('node-red-node-test-helper');
 const testedNode = require('../src/nodes/NGSI/v2ToLD/v2ToLD.js');
-// const brokerNode = require('../src/nodes/NGSI/contextbroker/contextbroker.js');
 
 const v2Data = require('./data/v2_agri_test.json');
 const ldData = require('./data/LD_test_data.json');
@@ -59,8 +58,6 @@ describe('NGSI v2ToLD Node', function() {
       helperNode.on('input', function(msg) {
         try {
           const convertedData = msg.payload;
-          // const ldObj = JSON.parse(ldData);
-          // assert.equal(convertedData, ldObj);
           assert.equal(JSON.stringify(convertedData), JSON.stringify(ldData));
           done();
         } catch (e) {

@@ -21,7 +21,7 @@
     },
     "seeAlso": {
         "type": "Property",
-        "value" :[
+        "value": [
             "https://example.org/concept/wheat",
             "https://datamodel.org/example/wheat"
         ]
