@@ -8,9 +8,10 @@ Official Node-Red FIWARE integration
 <br>
 [![Build badge](https://img.shields.io/travis/FIWARE/node-red-contrib-FIWARE_official.svg)](https://travis-ci.org/FIWARE/node-red-contrib-FIWARE_official/)
 
-Supported Nodes: 
+Supported Nodes:
 
 * NGSI(v2,LD) Entity
 * NGSI(v2,LD) Dataset
 * NGSI(v2,LD) Update
 * NGSI(v2,LD) Subscription
+* NGSI(v2) v2ToLD

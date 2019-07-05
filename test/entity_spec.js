@@ -8,7 +8,7 @@ const helper = require('node-red-node-test-helper');
 const testedNode = require('../src/nodes/NGSI/entity/entity.js');
 const brokerNode = require('../src/nodes/NGSI/contextbroker/contextbroker.js');
 
-const data = require('./test_data.json');
+const data = require('./data/v2_test_data.json');
 
 helper.init(require.resolve('node-red'));
 
