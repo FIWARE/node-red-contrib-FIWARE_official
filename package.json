@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-fiware_official",
-  "version": "0.5.3",
+  "version": "1.0.0",
   "description": "Node-Red FIWARE NGSIv2 & ETSI NGSI-LD official implementation",
   "scripts": {
     "test": "mocha \"test/**/*_spec.js\"",
