@@ -11,7 +11,7 @@
     "nodes": {
       "Entity": "src/nodes/NGSI/entity/entity.js",
       "Dataset": "src/nodes/NGSI/dataset/dataset.js",
-      "Update":  "src/nodes/NGSI/update/update.js",
+      "Update": "src/nodes/NGSI/update/update.js",
       "Subscription": "src/nodes/NGSI/subscription/subscription.js",
       "v2ToLD": "src/nodes/NGSI/v2ToLD/v2ToLD.js",
       "Context-Broker": "src/nodes/NGSI/contextbroker/contextbroker.js"
@@ -31,7 +31,7 @@
     "eslint-config-tamia": "^6.0.1",
     "eslint-plugin-prettier": "^2.7.0",
     "mocha": "^6.0.2",
-    "node-red": "^0.20.5",
+    "node-red": "^0.20.7",
     "node-red-node-test-helper": "^0.2.1",
     "prettier": "^1.16.4"
   },
