@@ -12,7 +12,7 @@
 const LD_CONTEXT = 'https://schema.lab.fiware.org/ld/context';
 const ETSI_CORE_CONTEXT =
   'https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld';
-const URI_PARSE = /^(?:[^:\/?#]+)/i;
+const URI_PARSE = /^(?:[^:/?#]+)/i;
 
 function ngsildUri(typePart, idPart) {
   let id = '';
