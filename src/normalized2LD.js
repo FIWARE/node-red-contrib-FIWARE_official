@@ -9,26 +9,28 @@
  *   Porting of https://github.com/FIWARE/dataModels/blob/master/tools/normalized2LD.py
  */
 
-const URI = require('uri-js');
-
 const LD_CONTEXT = 'https://schema.lab.fiware.org/ld/context';
 const ETSI_CORE_CONTEXT =
   'https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld';
+const URI_PARSE = /^(?:[^:/?#]+)/i;
 
 function ngsildUri(typePart, idPart) {
-  return `urn:ngsi-ld:${typePart}:${idPart}`;
+  let id = '';
+  const type = idPart.match(URI_PARSE)[0];
+  if (type.toLowerCase() === typePart.toLowerCase()) {
+    id = `urn:ngsi-ld:${idPart}`;
+  } else {
+    id = `urn:ngsi-ld:${typePart}:${idPart}`;
+  }
+  return id;
 }
 
 function ldId(entityId, entityType) {
   let out = entityId;
 
-  try {
-    const d = URI.parse(entityId);
-    const scheme = d.scheme;
-    if (scheme !== 'urn' && scheme !== 'http' && scheme !== 'https') {
-      throw new Error('Unknown Scheme Error');
-    }
-  } catch (e) {
+  const scheme = entityId.match(URI_PARSE)[0];
+
+  if (scheme !== 'urn' && scheme !== 'http' && scheme !== 'https') {
     out = ngsildUri(entityType, entityId);
   }
 
@@ -38,13 +40,9 @@ function ldId(entityId, entityType) {
 function ldObject(attributeName, entityId) {
   let out = entityId;
 
-  try {
-    const d = URI.parse(entityId);
-    const scheme = d.scheme;
-    if (scheme !== 'urn' && scheme !== 'http' && scheme !== 'https') {
-      throw new Error('Unknown Scheme Error');
-    }
-  } catch (e) {
+  const scheme = entityId.match(URI_PARSE)[0];
+
+  if (scheme !== 'urn' && scheme !== 'http' && scheme !== 'https') {
     let entityType = '';
     if (attributeName.startsWith('ref')) {
       entityType = attributeName.slice(3);
