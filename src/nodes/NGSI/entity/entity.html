@@ -1,6 +1,6 @@
 <!-- NGSI Entity Config UI -->
 <!-- Copyright (c) 2019 FIWARE Foundation e.V. -->
-<script type="text/javascript">
+<script type="text/javascript">{
     const defLdContext =
         'https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld';
 
@@ -24,7 +24,6 @@
         inputs: 1,
         outputs: 1,
         icon: 'icons/fiware.png',
-        align: 'right',
         label: function() {
             return this.name || 'NGSI Entity';
         }
@@ -48,7 +47,7 @@
        document.getElementById('ldContext').hidden = true;
        document.getElementById('mimeType').hidden = true;
     }
-</script>
+}</script>
 
 <script type="text/x-red" data-template-name="NGSI-Entity">
     <div class="form-row">
