@@ -1,0 +1,42 @@
+name: CI
+
+on:
+
+  push:
+    branches:
+      - master
+
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  tests:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x, 14.x, 15.x]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup orion
+      run: |
+        docker run --name mongodb -d mongo:3.6
+        docker run -d --name orion1 --link mongodb:mongodb -p 1026:1026 fiware/orion -dbhost mongodb
+        until $(curl -s -o /dev/null http://localhost:1026/version > /dev/null 2>&1); do sleep 1; done
+        npm install
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: lint
+      run: npm run lint
+
+    - name: test
+      run: npm test
