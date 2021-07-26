@@ -33,6 +33,10 @@ async function buildQueryHeaders(config, endpointConfig) {
     headers['Fiware-Service'] = endpointConfig.service;
   }
 
+  if (endpointConfig.servicepath && endpointConfig.servicepath.trim()) {
+    headers['Fiware-ServicePath'] = endpointConfig.servicepath;
+  }
+
   if (endpointConfig.securityEnabled === true) {
     const token = await endpointConfig.getToken();
 

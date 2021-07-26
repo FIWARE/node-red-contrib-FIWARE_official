@@ -15,8 +15,10 @@ helper.init(require.resolve('node-red'));
 describe('NGSI Dataset Node', function() {
   const ENDPOINT = 'http://localhost:1026';
   const TENANT = 'test';
+  const SERVICEPATH = '/';
   const HEADERS = {
-    'Fiware-Service': TENANT
+    'Fiware-Service': TENANT,
+    'Fiware-ServicePath': SERVICEPATH
   };
 
   const configNode = {
@@ -24,7 +26,8 @@ describe('NGSI Dataset Node', function() {
     name: 'broker',
     type: 'Context-Broker',
     endpoint: ENDPOINT,
-    service: TENANT
+    service: TENANT,
+    servicepath: SERVICEPATH
   };
 
   const retrievalFlow = [

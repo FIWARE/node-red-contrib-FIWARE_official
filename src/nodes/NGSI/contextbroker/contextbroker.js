@@ -19,6 +19,7 @@ module.exports = function(RED) {
 
     node.endpoint = common.getParam('endpoint', config);
     node.service = common.getParam('service', config);
+    node.servicepath = common.getParam('servicepath', config);
 
     node.idmEndpoint = common.getParam('idmEndpoint', config);
     node.username = common.getParam('username', node.credentials);
