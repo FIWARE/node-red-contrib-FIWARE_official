@@ -146,6 +146,11 @@ async function buildHeaders(config, endpointConfig) {
     headers['Fiware-Service'] = endpointConfig.service;
   }
 
+  if (endpointConfig.servicepath && endpointConfig.servicepath.trim()) {
+    headers['Fiware-ServicePath'] = endpointConfig.servicepath;
+  }
+
+
   if (endpointConfig.securityEnabled) {
     const token = await endpointConfig.getToken();
     headers['X-Auth-Token'] = token;

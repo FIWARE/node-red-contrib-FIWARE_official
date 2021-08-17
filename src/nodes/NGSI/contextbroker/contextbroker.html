@@ -36,6 +36,9 @@
                 value: ''
             },
 
+            servicepath: {
+                value: ''
+            },
             idmEndpoint: {
                 value: '',
                 validate: endpointValidator.bind(null, false)
@@ -95,6 +98,10 @@
                 <label for="node-config-input-service"><i class="icon-tag"></i> Fiware-Service</label>
                 <input type="text" id="node-config-input-service">
             </div>
+            <div class="form-row">
+               <label for="node-config-input-servicepath"><i class="icon-tag"></i> Fiware-ServicePath</label>
+               <input type="text" id="node-config-input-servicepath">
+           </div>
         </div>
 
         <div id="context-broker-tab-security" style="display:none">
